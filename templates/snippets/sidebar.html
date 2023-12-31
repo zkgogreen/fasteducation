@@ -1,0 +1,9 @@
+<div class="sidebar h6 shadow-sm" id="sidebar">
+    <div class="d-none d-md-block"><img src="/media/{{config.icon}}" alt="logo" style="height: 60px;"></div>
+    {% if peran == 'user' %}
+    <a {% if url == 'home' %}class="active"{% endif %} href="{% url 'home' %}"><i class="fas fa-home"></i><span class="ms-3 d-none d-sm-block">Home</span></a>
+    <a {% if url == 'modul' %}class="active"{% endif %} href="{% url 'modul:index' %}"><i class="fa-solid fa-person-chalkboard"></i><span class="ms-3 d-none d-sm-block">Pelajaran</span></a>
+    <a {% if url == 'kelas' %}class="active"{% endif %} href="{% url 'kelas:index' %}"><i class="fa-regular fa-calendar-check"></i><span class="ms-3 d-none d-sm-block">Kelas</span></a>
+    <a href="#about"><i class="fa-solid fa-check "></i><span class="me-3 d-none d-sm-block">About</span></a>
+    {% endif %}
+</div>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+    {% block head %}{% endblock head %}
+    {% block css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+      body {
+        background-color: #F8F9FA;
+      }
+    </style>
+    {% endblock css %}
+    {% block navigation %}
+    {% include 'snippets/sidebar.html' with peran='user' %}
+    {% include 'snippets/topbar.html' %}
+    {% endblock %}
+    {% block content %}
+    {% endblock content %}
+    {% if messages %}
+      {% for message in messages %}
+      <div class="modal fade show" id="modalmessage" tabindex="-1" aria-labelledby="modalmessageLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" {% if message.tags == 'success' %} style="border: solid rgb(66, 255, 66, 0.5) 2px;" {% else %} style="border: solid rgba(255, 41, 41, 0.5) 2px;"{% endif %}>
+                  <div class="modal-body p-3">
+                      <div class="d-flex justify-content-end">
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="d-flex gap-2">
+                          <img src="/media/module/jawaban/{{message.tags}}.jpg" alt="{{message.tag}}" style="mix-blend-mode: multiply; height: 150px;" class="p-1">
+                          <span class="align-self-center col">{{ message }}</span>
+                      </div>
+                      <div class="d-flex gap-2">
+                          <button type="button" class="btn btn-primary col" data-bs-dismiss="modal">Tutup</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+      
+      {% endif %}
+      {% block modal %}
+      {% endblock modal %}
+      {% block script %}
+      <script>
+        $(window).on('load', function() {
+            $('#modalmessage').modal('show');
+        });
+      </script>
+      <script src="{% static 'js/dashboard.js' %}"></script>
+      {% endblock script %}

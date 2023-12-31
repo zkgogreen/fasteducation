@@ -1,0 +1,92 @@
+
+<div class="footer">
+    <div class="d-flex justify-content-around h4 fw-light mt-2">
+        {% if not forbidden %}
+            {% if prev %}
+                <a href="{% url 'modul:modul' slug=slug urutan_bab=urutan_bab urutan_pelajaran=prev.pelajaran.urutan %}" class="d-flex btn btn-lg">
+                    <i class="fas fa-circle-left align-self-center"></i>
+                    <span class="ms-3 d-none d-md-block">{{prev.pelajaran.judul}}</span>
+                </a>
+            {% else %}
+                <div></div>
+            {% endif %}
+        {% else %}
+        <button class="d-flex btn btn-lg" onclick="history.back();"><i class="fas fa-circle-left align-self-center"></i><span class="ms-3 d-none d-md-block">Kembali</span></button>
+        {% endif %}
+
+        <span class="align-self-center">
+            {% if current_pelajaran %}{{pelajaran.judul}}{% else %}{{ current_bab.bab }}{% endif %}
+        </span>
+
+        {% if not forbidden %}
+            {% if next %}
+                {% if next.isdone %}
+                <a href="{% url 'modul:modul' slug=slug urutan_bab=urutan_bab urutan_pelajaran=next.pelajaran.urutan %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">{{next.pelajaran.judul}}</span><i class="fas fa-circle-right align-self-center"></i></a>
+                {% else %}
+                <button class="btn d-flex btn-lg" data-bs-toggle="modal" data-bs-target="#modalSoal"><span class="me-3 d-none d-md-block align-self-center">Kerjakan Soal</span><i class="fas fa-flag align-self-center"></i></button>
+                {% endif %}
+            {% elif next_bab and current.isdone %}
+            <a href="{% url 'modul:rangkuman' slug=slug urutan_bab=urutan_bab %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Rangkuman</span><i class="fas fa-list-check  align-self-center"></i></a>
+            {% elif halaman == "rangkuman" %}
+            <a href="{% url 'modul:koridor_soal' slug=slug urutan_bab=urutan_bab %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Latihan</span><i class="fas fa-flag-checkered  align-self-center"></i></a>
+            {% else %}
+            <button class="btn d-flex btn-lg" data-bs-toggle="modal" data-bs-target="#modalSoal"><span class="me-3 d-none d-md-block align-self-center">Kerjakan Soal</span><i class="fas fa-flag align-self-center"></i></button>
+            {% endif %}
+        {% else %}
+        <div></div>
+        {% endif %}
+        
+        
+        {% comment %}
+        {% if next %}
+        <a href="{% url 'modul:modul' slug=slug urutan_bab=urutan_bab urutan_pelajaran=next.urutan %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">{{next.judul}}</span><i class="fas fa-circle-right align-self-center"></i></a>
+        {% else %}
+            {% if halaman == 'soal' %}
+                {% if nilai.0.nilai >= 80 %}
+                    {% if nextbab %}
+                        <a href="{% url 'modul:pelajaran' slug=pelajaran.kelas.slug urutan_bab=nextbab.urutan urutan_pelajaran=1 %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Materi Selanjutnya</span><i class="fas fa-circle-right  align-self-center"></i></a>
+                    {% else %}
+                        <a href="{% url 'modul:rangkuman_kelas' slug=pelajaran.kelas.slug %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Rangkuman</span><i class="fas fa-circle-right align-self-center"></i></a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'modul:soal' slug=pelajaran.kelas.slug urutan_bab=pelajaran.bab_kelas.urutan %}" class="align-self-center btn btn-secondary btn-sm fw-bold px-3 rounded-0">{% if nilai.0.nilai %} Coba lagi {% else %} Kerjakan soal {% endif %}</a>
+                {% endif %}
+            {% elif halaman == 'rangkuman' %}
+                <a href="{% url 'modul:koridor_soal' slug=slug urutan_bab=urutan_bab %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Latihan</span><i class="fas fa-flag-checkered  align-self-center"></i></a>
+            {% elif halaman == 'rangkumankelas' %}
+                <a href="{% url 'modul:koridor_soal_kelas' slug=slug %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Latihan</span><i class="fas fa-flag-checkered  align-self-center"></i></a>
+            {% elif halaman == 'soal_kelas' %}
+                test
+            {% else %}
+                 <a href="{% url 'modul:rangkuman' slug=slug urutan_bab=urutan_bab %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Rangkuman</span><i class="fas fa-list-check  align-self-center"></i></a>
+            {% endif %}
+        {% endif %}
+        {% endcomment %}
+    </div>
+</div>
+
+{% block modal %}
+<div class="modal fade" id="modalSoal" tabindex="-1" aria-labelledby="modalSoalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalSoalLabel">{{ soal.soal }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{soal.id}}">
+            <div class="modal-body d-flex flex-column gap-2 w-100">
+                {% for pilihan in soal.questionList %}
+                <input type="radio" class="btn-check" name="jawaban" value="{{pilihan}}" id="option{{forloop.counter}}" autocomplete="off">
+                <label class="btn btn-outline-primary w-100 text-start" for="option{{forloop.counter}}">{{pilihan}}</label>
+                {% endfor %}
+            </div>
+            <div class="modal-footer d-flex gap-2">
+              <button type="submit" class="col btn btn-primary">Kirim</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

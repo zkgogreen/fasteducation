@@ -1,0 +1,62 @@
+{% extends 'modul/kelas/pelajaran/base.html' %}
+
+{% block content %}
+<div class="isi bg-white">
+    <div class="container my-4">
+        <div class="shadow p-3">
+            <h3>Soal {{pelajaran.bab}}</h3>
+            <hr><br>
+            <div class="container">
+                <div class="card">
+                    <div class="card-header fw-bold h3"><i class="fa-solid fa-book text-primary me-3"></i>Riwayat Ujian</div>
+                    <div class="card-body">
+                        {% if nilai %}
+                        <div class="d-flex h4 fw-bold mb-4">
+                            <div class="col-3 text-center">Ujian</div>
+                            <div class="col-3 text-center">waktu</div>
+                            <div class="col-3 text-center">Nilai</div>
+                            <div class="col-3 text-center">Nilai</div>
+                        </div>
+                        {% for n in nilai %}
+                        <div class="d-flex fw-bold mb-2 text-center">
+                            <div class="col-3">{{n.tanggal|date:"d-m-Y"}}</div>
+                            <div class="col-3">{{n.countdownNow|time:"i:s"}}</div>
+                            <div class="col-3 text-center align-self-center text-success">
+                                {% if n.nilai %}
+                                <h4 class="{% if n.nilai > 79 %}text-success{%else%}text-danger{%endif%}">{{n.nilai}}</h4>
+                                {% else %}
+                                <h4>-</h4>
+                                {% endif %}
+                            </div>
+                            <div class="col-3">
+                                {% if n.nilai %}
+                                <a href="{% url 'user:pembahasan' id=n.id %}" class=" btn btn-dark rounded-0 fw-bold btn-sm" style="width: 100px;">detail</a>
+                                {% else %}
+                                <a href="#" style="width: 100px;" class="btn btn-dark fw-bold btn-sm rounded-0">Lanjutkan</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="text-center h3 ">Belum ada history</div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        {% if nilai.0.nilai < 80 or not nilai.0.nilai %}
+                        <div class="d-flex h5 fw-bold justify-content-end">
+                            <div class="col-5 align-self-center  text-center">
+                                {% if halaman == "soal" %}
+                                <a href="{% url 'user:soal' slug=pelajaran.kelas.slug urutan_bab=pelajaran.bab_kelas.urutan %}" class="btn btn-secondary btn-sm fw-bold px-3 rounded-0">{% if nilai.0.nilai %} Coba lagi {% else %} Kerjakan soal {% endif %}</a>
+                                {% elif halaman == "soal_kelas" %}
+                                <a href="{% url 'user:soal_kelas' slug=kelas.slug %}" class="btn btn-secondary btn-sm fw-bold px-3 rounded-0">{% if nilai.0.nilai %} Coba lagi {% else %} Kerjakan soal {% endif %}</a>
+                                {%endif%}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

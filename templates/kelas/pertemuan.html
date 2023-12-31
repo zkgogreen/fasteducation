@@ -1,0 +1,130 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block title %}Pertemuan{% endblock %}
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+{% endblock head %}
+{% block css %}
+<style>
+  .btn-rsch > a {
+    display: none;
+  }
+  .btn-rsch:hover > a {
+    display: block;
+  }
+  @media screen and (max-width: 576px) {
+  .btn-rsch > a {
+    display: block;
+  }
+  }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+  <div class="container bg-white shadow p-4">
+    <div class="table-responsive">
+      <table class="table" id="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mentor</th>
+            <th scope="col">Tanggal</th>
+            <th scope="col">Jam</th>
+            <th scope="col">Nilai</th>
+            <th scope="col">Catatan</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for j in jadwal %}
+          <tr>
+            <th>{% if j.hadir %} <i class="fas fa-check text-success"></i>{% elif j.absent %} <i class="fas fa-times text-danger"></i>{%else%}-{%endif%} </th>
+            <th scope="row">
+              <div class="d-flex">
+                <div class="rounded-img" style="width: 40px; height: 40px;"><img src="/media/{{j.room.usermentor.photo}}" alt=""></div>
+                <div class="h5 ms-3 align-self-center d-none d-md-block">{{j.room.mentor.first_name}} {{j.room.mentor.last_name}}</div>
+              </div>
+            </th>
+            <td>{{j.tanggal|date:"d M Y"}}</td>
+            <td>{{j.room.get_time_display}} WIB</td>
+            <td>{% if j.performance %}{{j.performance}}/10{% else %} - {% endif %}</td>
+            <td>{% if j.hadir %}{{j.feedback}}{% else %}-{% endif %}</td>
+            {% if j.now %}
+            <td class="text-end"><a href="{{j.room.link}}" target="_blank" style="width: 100px; display: block;" class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm">Buka</a></td>
+            {% elif j.hadir %}
+            <td></td>
+            {% else %}
+            <td class="text-end"><a href="#" onclick="reschadule('{{j.tanggal}}','{{j.room.get_time_display}}','{{j.id}}')" style="width: 100px;" class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Reschadule</a></td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Reschadule</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'user:bootcamp' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" id="id">
+      <div class="modal-body">
+          <div class="d-flex justify-content-center h4">
+            <span id="title" class="btn btn-outline-secondary rounded-0" style="width: 300px;"></span>
+            <i class="fas fa-arrow-right mx-3 align-self-center"></i>
+            <input type="date" name="date" id="date" style="width: 300px;" class="form-control rounded-0">
+          </div>
+          <div class="d-flex justify-content-center h4">
+            <span id="jam" class="btn btn-outline-secondary rounded-0" style="width: 300px;"></span>
+            <i class="fas fa-arrow-right mx-3 align-self-center"></i>
+            <select class="form-select form-select-sm rounded-0" name="time" style="width: 300px;">
+              <option selected>Pilih Jam</option>
+              <option value="0">07:30</option>
+              <option value="1">09:00</option>
+              <option value="2">10:30</option>
+              <option value="3">13:00</option>
+              <option value="4">14:30</option>
+              <option value="5">16:00</option>
+              <option value="6">18:30</option>
+              <option value="7">20:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary rounded-0" data-bs-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-secondary rounded-0">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+$(document).ready(function() {
+  $('#table').DataTable({
+    responsive: true,
+    order: [],
+  });
+});
+</script>
+<script>
+const title = document.getElementById("title")
+const jam   = document.getElementById("jam")
+const id  = document.getElementById("id")
+function reschadule(titles, jams, ids){
+  title.innerHTML = titles
+  jam.innerHTML   = jams
+  id.value        = ids
+}
+</script>
+{% endblock script %}

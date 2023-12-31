@@ -1,0 +1,169 @@
+{% extends 'dashboard.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block css %}{% endblock css %}
+{% block title %}Jadwal{% endblock %}
+{% block content %}
+<div class="content">
+  <div class="bg-white rounded shadow-sm">
+    <div class="container p-3">
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <div class="display-6">Level</div>
+          <div class="h4 fw-light">{{user.level.name}}<i class="ms-1 fa-regular fa-thumbs-up"></i></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">Performa</div>
+          <div class="h4 fw-light">30%</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">Pertemuan</div>
+          <div class="h5 fw-light">{{meeting.meetremain}} <span class="fw-lighter">dari</span> {{meeting.accountlevel.meeting}} Pertemuan</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">Berakhir</div>
+          <div class="h4 fw-light">{{meeting.end|date:"d M Y"}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container shadow-sm mt-4 rounded bg-white p-2">
+    <div class="container">
+      {% if meeting.room %}
+      <div class="display-6 ms-3">Jadwal saya</div>
+      {% endif %}
+      {% if not meeting.room %}
+      <div class="display-6 ms-3">Pilih Jadwal</div>
+      <hr>
+      <div class="row fw-semibold">
+        <div class="col-2 text-center">Mentor</div>
+        <div class="col-2 text-center">Hari</div>
+        <div class="col-2 text-center">Jam</div>
+        <div class="col-2 text-center">Kuota</div>
+        <div class="col-2 text-center">mulai</div>
+        <div class="col-2 text-center">daftar</div>
+      </div>
+      <hr>
+      {% for mentor in mentor %}
+      <div class="row fw-semibold">
+        <div class="col-2" style="margin-bottom: -8px;">
+          <div class="d-flex justify-content-center btn" data-bs-toggle="collapse"
+            data-bs-target="#mentor{{mentor.id}}" aria-expanded="false" aria-controls="mentor{{mentor.id}}">
+            <div class="me-3">
+              <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+                src="/media/{% if mentor.user.photo %}{{ mentor.user.photo }}{% else %}/profile/image{% random_int 1 24 %}.jpg{% endif %}"
+                alt="">
+            </div>
+            <p class="mt-2 text-dark fw-bold">{{mentor.user.user.first_name}} {{mentor.user.user.last_name}} <i class="ms-2 fas fa-caret-down"></i></p>
+          </div>
+        </div>
+        <div class="col-2 text-center align-self-center">{{mentor.get_jadwal_display}}</div>
+        <div class="col-2 text-center align-self-center">
+          <div class="btn btn-sm btn-outline-light text-muted fw-bold">{{mentor.get_time_display}}</div>
+        </div>
+        <div class="col-2 text-center align-self-center">{{mentor.peserta}}/{{mentor.program.siswa}}</div>
+        <div class="col-2 text-center align-self-center">{% if mentor.mulai %}{{mentor.mulai|date:"d M Y"}}{%else%}Belum dimulai{%endif%}</div>
+        <div class="col-2 text-center align-self-center">
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="tipe" value="regular">
+            <input type="hidden" name="id" value="{{ mentor.id }}">
+            <button type="submit" class="btn btn-primary rounded-0">daftar</button>
+          </form>
+        </div>
+        <div class="container collapse multi-collapse" id="mentor{{mentor.id}}">
+          <div class="d-flex justify-content-between m-4 bg-light p-2 rounded-4">
+            <div class=" d-flex ">
+              <img style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;" src="/media/{% if mentor.user.photo %}{{ mentor.user.photo }}{% else %}/profile/image{% random_int 1 24 %}.jpg{% endif %}" alt="">
+              <div class="ms-2 d-flex flex-column justify-content-between">
+                <div>
+                  <h5>{{mentor.user.user.first_name}} {{mentor.user.user.last_name}} </h5>
+                  <p>
+                  <div class="btn btn-sm btn-primary">{{mentor.teacher.mastered.name}}</div> <br>{{mentor.teacher.desc}}</p>
+                  <i class="fas fa-star text-warning me-2"></i>4.8
+                </div>
+              </div>
+            </div>
+            <div class="align-self-center">
+              <div class="btn text-primary btn-sm rounded-0 me-3"><i class="far fa-message h3"></i></div>
+              <div class="btn text-primary btn-sm rounded-0"><i class="far fa-user h3"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if private %}
+      <hr>
+      <div class="row fw-semibold">
+        <div class="col-3 text-center">Mentor</div>
+        <div class="col-4 text-center">Hari</div>
+        <div class="col-2 text-center">Jam</div>
+        <div class="col-2 text-center">daftar</div>
+      </div>
+      <hr>
+      {% for p in private %}
+      <div class="row fw-semibold">
+        <!-- mentor -->
+        <div class="col-3" style="margin-bottom: -8px;">
+          <div class="d-flex justify-content-center btn" data-bs-toggle="collapse"
+            data-bs-target="#mentor{{p.id}}" aria-expanded="false" aria-controls="mentor{{p.id}}">
+            <div class="me-3">
+              <img style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+                src="http://{{ request.get_host }}/media/{{p.mentor.photo}}"
+                alt="">
+            </div>
+            <p class="mt-2 text-dark fw-bold">{{p.mentor.user.first_name}} {{p.mentor.user.last_name}}</p>
+          </div>
+        </div>
+        <!-- jam -->
+        <div class="col-4 text-center align-self-center">
+          {% for x in p.room.all %}
+            <div class="btn btn-sm btn-outline-light text-muted fw-bold">
+              {{x.get_day_display}}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-2 text-center align-self-center">{{p.room.all.0.time|date:"G:i"}}</div>
+        <div class="col-2 text-center align-self-center">
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="tipe" value="private">
+            <input type="hidden" name="id" value="{{ p.id }}">
+            <button type="submit" class="btn btn-primary rounded-0">daftar</button>
+          </form>
+        </div>
+        <div class="container collapse multi-collapse" id="mentor{{p.id}}">
+          <div class="d-flex justify-content-between m-4 bg-light p-2 rounded-4">
+            <div class=" d-flex ">
+              <img style="width: 150px; height: 150px; border-radius: 10px; object-fit: cover;"
+                src="http://{{ request.get_host }}/media/{{p.mentor.photo}}"
+                alt="">
+              <div class="ms-2 d-flex flex-column justify-content-between">
+                <div>
+                  <h5>Muhammad Zakaria</h5>
+                  <p>
+                  <div class="btn btn-sm btn-primary">Intermediate</div> <br>Grammar</p>
+                  <i class="fas fa-star text-warning me-2"></i>4.8
+                </div>
+              </div>
+            </div>
+            <div class="align-self-center">
+              <div class="btn text-primary btn-sm rounded-0 me-3"><i class="far fa-message h3"></i></div>
+              <div class="btn text-primary btn-sm rounded-0"><i class="far fa-user h3"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+      <hr>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block script %}
+{% endblock script %}

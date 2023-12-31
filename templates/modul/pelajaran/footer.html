@@ -1,0 +1,48 @@
+
+<div class="footer">
+    <div class="d-flex justify-content-around h4 fw-light mt-2">
+        {% if hasPrev %}
+            <a href="{% url 'modul:pelajaran' slug=pelajaran.kelas.slug urutan_bab=pelajaran.bab_kelas.urutan urutan_pelajaran=hasPrev.urutan %}" class="d-flex btn btn-lg">
+                <i class="fas fa-circle-left align-self-center"></i>
+                <span class="ms-3 d-none d-md-block">{{hasPrev.judul}}</span>
+            </a>
+        {% elif halaman == 'rangkumankelas' %}
+            <a href="{% url 'modul:koridor_soal' slug=kelas.slug urutan_bab=babprev.bab_kelas.urutan %}" class="d-flex btn btn-lg">
+                <i class="fas fa-circle-left align-self-center"></i>
+                <span class="ms-3 d-none d-md-block">Latihan {{babprev.bab_kelas.bab}}</span>
+            </a>
+        {% else %}
+            <div></div>
+        {% endif %}
+
+        <span class="align-self-center">
+            {% if halaman == 'soal' or halaman == 'rangkuman' %}Latihan {{ pelajaran.bab_kelas.bab }}
+            {% elif halaman == 'rangkumankelas' %}Rangkuman {{kelas.kelas}}
+            {% else %}{{pelajaran.judul}}{% endif %}
+        </span>
+
+        {% if hasNext %}
+        <a href="{% url 'modul:pelajaran' slug=pelajaran.kelas.slug urutan_bab=pelajaran.bab_kelas.urutan urutan_pelajaran=hasNext.urutan %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">{{hasNext.judul}}</span><i class="fas fa-circle-right align-self-center"></i></a>
+        {% else %}
+            {% if halaman == 'soal' %}
+                {% if nilai.0.nilai >= 80 %}
+                    {% if nextbab %}
+                        <a href="{% url 'modul:pelajaran' slug=pelajaran.kelas.slug urutan_bab=nextbab.urutan urutan_pelajaran=1 %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Materi Selanjutnya</span><i class="fas fa-circle-right  align-self-center"></i></a>
+                    {% else %}
+                        <a href="{% url 'modul:rangkuman_kelas' slug=pelajaran.kelas.slug %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Rangkuman</span><i class="fas fa-circle-right align-self-center"></i></a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'modul:soal' slug=pelajaran.kelas.slug urutan_bab=pelajaran.bab_kelas.urutan %}" class="align-self-center btn btn-secondary btn-sm fw-bold px-3 rounded-0">{% if nilai.0.nilai %} Coba lagi {% else %} Kerjakan soal {% endif %}</a>
+                {% endif %}
+            {% elif halaman == 'rangkuman' %}
+                <a href="{% url 'modul:koridor_soal' slug=pelajaran.kelas.slug urutan_bab=pelajaran.bab_kelas.urutan %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Latihan</span><i class="fas fa-flag-checkered  align-self-center"></i></a>
+            {% elif halaman == 'rangkumankelas' %}
+                <a href="{% url 'modul:koridor_soal_kelas' slug=kelas.slug %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Latihan</span><i class="fas fa-flag-checkered  align-self-center"></i></a>
+            {% elif halaman == 'soal_kelas' %}
+                test
+            {% else %}
+                 <a href="{% url 'modul:rangkuman' slug=slug bab=urutan_bab %}" class="d-flex btn btn-lg"><span class="me-3 d-none d-md-block">Rangkuman</span><i class="fas fa-list-check  align-self-center"></i></a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

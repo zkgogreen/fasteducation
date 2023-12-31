@@ -1,0 +1,204 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block title %}dashboard{% endblock %}
+{% block css %}
+<style>
+  .btn-rsch > a {
+    display: none;
+  }
+  .btn-rsch:hover > a {
+    display: block;
+  }
+  .messages {
+    width: 100%;
+    display: flex;
+    border-radius: 2%;
+    padding: 20px;
+  }
+  .messages.messages-error{
+    background-color: yellow
+  }
+  .messages.messages-success  {
+    background-color: lightgreen;
+  }
+
+  @media screen and (max-width: 576px) {
+  .btn-rsch > a {
+    display: block;
+  }
+  }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+  {% if messages %}
+      {% for message in messages %}
+        <div class="messages {% if message.tags %}messages-{{ message.tags }} mb-4"{% endif %}>
+          <h3>{{ message }}</h3>
+        </div>
+      {% endfor %}
+  {% endif %}
+  <div class="bg-white rounded shadow-sm">
+    <div class="container p-3">
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <div class="display-6">Level</div>
+          <div class="h4 fw-light">{{user.level.name}}<i class="ms-1 fa-regular fa-thumbs-up"></i></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">Performa</div>
+          <div class="h4 fw-light">30%</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">Pertemuan</div>
+          <div class="h5 fw-semibold">{{meeting.meetremains}} <span class="fw-lighter">dari</span> {{meeting.accountlevel.meeting}} Pertemuan</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="display-6">Berakhir</div>
+          <div class="h4 fw-light">{{meeting.end|date:"d M Y"}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-lg-6 mt-4">
+      <div class="container shadow-sm rounded bg-white p-3" style="height: 450px;">
+        <p class="h3 fw-semibold my-2">Akan datang</p>
+        <table class="table  table-hover">
+          <thead>
+            <tr>
+              <th scope="col">TUTOR</th>
+              <th scope="col">Tanggal</th>
+              <th scope="col">Jadwal</th>
+              <th scope="col" style="width: 120px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for y in yet %}
+            <tr style="height: 50px;">
+              <td class="d-none">{{y.id}}</td>
+              <th><div class="rounded-img" style="width: 30px; height: 30px;"><img src="/media/{{y.room.usermentor.photo}}" alt=""></div></th>
+              <td>{{y.tanggal|date:"d M Y"}}</td>
+              <td><span {% if y.now %} id="gettime" {% endif %}>{{y.schadule.get_time_display}}</span> WIB</td>
+                {% if y.now %}
+                <td class="text-end"><a href="{{y.room.link}}" target="_blank" style="width: 100px; display: block;" class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm" id="time">Waiting</a></td>
+                {% else %}
+                <td class="btn-rsch text-end"><a href="#" onclick="reschadule('{{y.tanggal}}','{{y.room.get_time_display}}','{{y.id}}')" style="width: 100px;" class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Reschadule</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="d-grid"><a href="{% url 'kelas:pertemuan' %}" class="btn btn-secondary btn-sm rounded-0">Lihat Semua</a></div>
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-6 mt-4">
+        <div class="container shadow-sm rounded bg-white p-3" style="height: 450px;">
+          <p class="h3 fw-semibold my-2">Terlaksana</p>
+          <table class="table  table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Tanggal</th>
+                <th scope="col">Score</th>
+                <th scope="col">Feedback</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for y in done %}
+              <tr style="height: 50px;">
+                <td>{{y.tanggal|date:"d M"}}</td>
+                <td>{% if y.performance %}{{y.performance}}/10{% else %} - {% endif %}</td>
+                <td>{% if y.hadir %}{{y.feedback}}{% else %}<a href="#" onclick="reschadule('{{y.tanggal}}','{{y.room.get_time_display}}','{{y.id}}')" style="width: 100px;" class="btn btn-outline-secondary fw-semibold rounded-0 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Reschadule</a>{% endif %} </td>
+              </tr>
+              {% endfor %}
+          </table>
+          <div class="d-grid"><a href="{% url 'kelas:pertemuan' %}" class="btn btn-secondary btn-sm rounded-0">Lihat Semua</a></div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Reschadule</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" id="id">
+      <div class="modal-body">
+          <div class="d-flex justify-content-center h4">
+            <span id="title" class="btn btn-outline-secondary rounded-0" style="width: 300px;"></span>
+            <i class="fas fa-arrow-right mx-3 align-self-center"></i>
+            <input type="date" name="date" id="date" style="width: 300px;" class="form-control rounded-0">
+          </div>
+          <div class="d-flex justify-content-center h4">
+            <span id="jam" class="btn btn-outline-secondary rounded-0" style="width: 300px;"></span>
+            <i class="fas fa-arrow-right mx-3 align-self-center"></i>
+            <select class="form-select form-select-sm rounded-0" name="time" style="width: 300px;">
+              <option selected>Pilih Jam</option>
+              <option value="0">07:30</option>
+              <option value="1">09:00</option>
+              <option value="2">10:30</option>
+              <option value="3">13:00</option>
+              <option value="4">14:30</option>
+              <option value="5">16:00</option>
+              <option value="6">18:30</option>
+              <option value="7">20:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary rounded-0" data-bs-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-secondary rounded-0">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+const title = document.getElementById("title")
+const jam   = document.getElementById("jam")
+const id  = document.getElementById("id")
+function reschadule(titles, jams, ids){
+  title.innerHTML = titles
+  jam.innerHTML   = jams
+  id.value        = ids
+}
+</script>
+<script>
+var time              = document.getElementById("time");
+var countdownElement  = document.getElementById("gettime");
+function updateCountdown() {
+    var now = new Date();
+
+    var initialTime = countdownElement.innerText.split(":");
+    var targetHours = parseInt(initialTime[0]);
+    var targetMinutes = parseInt(initialTime[1]);
+    var targetTime = new Date();
+    targetTime.setHours(targetHours, targetMinutes-3, 0, 0);
+
+    var timeDiff = targetTime - now;
+
+    if (timeDiff <= 0) {
+        time.innerHTML = 'Buka Zoom';
+        time.classList.remove("disabled")
+    } else {
+        var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+        time.innerHTML = hours + 'h ' + minutes + 'm ' + seconds + 's';
+    }
+}
+setInterval(updateCountdown, 1000);
+</script>
+{% endblock script %}

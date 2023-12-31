@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load custom_tags %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'snippets/navbar.html' %}
+<div data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="scrollspy-example bg-body-tertiary p-3 rounded-2" tabindex="0">
+
+    <!-- jumbotron -->
+    <div class="container d-flex py-5" id="home" style="margin-top: 80px;">
+      <div class="col-12 col-md-6">
+          <div class="display-4 mb-3 fw-semibold">{{config.title}}</div>
+          <h5 style="line-height: 1.5em;">{{config.sub}}</h5>
+          <a href="#kelas" class="px-2 mt-3 btn btn-lg fw-bold bg-accent text-white">Daftar Sekarang</a>
+      </div>
+      <div class="col-6 d-none d-md-block"><img src="../media/{{config.foto}}" style="mix-blend-mode: multiply; max-width: 450px; width: 100%; margin-top: -50px;" alt=""></div>
+    </div>
+    <div class="container bg-primary rounded-3 bg-opacity-50">
+        <div class="row justify-content-center">
+          <div class="col-md-4 col-12"><div class="d-flex"><div class="btn btn-lg btn-primary rounded-0 m-3 me-2"><i class="fa-solid fa-chalkboard-user"></i></div><span class="align-self-center">{{teacher}} Tutor Pengajar</span></div></div>
+            <div class="col-md-4 col-12"><div class="d-flex"><div class="btn btn-lg btn-primary rounded-0 m-3 me-2"><i class="fa-solid fa-users-rectangle"></i></div><span class="align-self-center">{{user}} User terdaftar</span></div></div>
+            <div class="col-md-4 col-12"><div class="d-flex"><div class="btn btn-lg btn-primary rounded-0 m-3 me-2"><i class="fa-solid fa-book-open"></i></div><span class="align-self-center">{{module}} Module Pembelajaran</span></div></div>
+        </div>
+    </div>
+    <!-- endjumbotron -->
+
+    <!-- penjelasan -->
+    <div class="container py-5" id="penjelasan">
+      <div class="text-center display-6">Apa yang akan kamu capai di <span class="text-accent">bulan pertama</span> ?</div>
+      <div class="d-flex mt-5">
+          <div class="col-6 text-center h4 align-self-center" >
+              <i class="fa-solid fa-language text-primary " style="font-size: 7rem;"></i><br>
+              VOCABULARY <br> / <span class="text-danger">vəʊˈkæbjʊləri</span> /
+          </div>
+          <span style="border-left: 2px solid lightgray;"  class="align-self-center h4 ps-4">Dengan metode <span class="text-primary">"READ & PRACTICE"</span>, kamu akan menguasai ribuan kosakata tanpa hafalan karena langsung diaplikasikan pada <span class="text-primary">SPEAKING</span></span>
+      </div>
+      <div class="d-flex mt-3">
+          <span style="border-right: 2px solid lightgray;" class="align-self-center text-end h4 pe-4">Tau kan tulisan dan pengucapan Bahasa Inggris itu berbeda, disini kamu akan belajar <span class="text-primary">IPA (International Phonetic Alphabets)</span> biar gak salah baca lagi. <span class="text-primary">Contoh IPA pada tulisan berwarna " <span class="text-danger">MERAH</span> " disamping</span></span>
+          <div class="col-6 text-center h4 align-self-center" >
+              <i class="fa-regular fa-comments text-primary " style="font-size: 7rem;"></i><br>
+              PRONUNCIATION <br> / <span class="text-danger">prəˌnʌnsɪˈeɪʃən</span> /
+          </div>
+      </div>
+      <div class="d-flex mt-3">
+          <div class="col-6 text-center h4 align-self-center" >
+              <i class="fa-solid fa-people-group text-primary " style="font-size: 7rem;"></i><br>
+              CONFIDANCE <br> / <span class="text-danger">ˈkɑnfədəns</span> /
+          </div>
+          <span style="border-left: 2px solid lightgray;"  class="align-self-center h4 ps-4">Masih grogi ketika <span class="text-primary">PUBLIC SPEAKING ?</span> Asah Kemampuan Presentasi dalam Bahasa Inggris dengan Percaya Diri!</span>
+      </div>
+      <div class="d-flex mt-3">
+          <span style="border-right: 2px solid lightgray;" class="align-self-center text-end h4 pe-4">Punya keluhan sama rumus <span class="text-primary">GRAMMAR?</span> Nah, disini kamu akan bisa <span class="text-primary">SPEAKING</span> pakai <span class="text-primary">GRAMMAR</span> walau tanpa rumus karena langsung dipraktekkan</span>
+          <div class="col-6 text-center h4 align-self-center" >
+              <i class="fas fa-spell-check text-primary " style="font-size: 7rem;"></i><br>
+              GRAMMAR <br> / <span class="text-danger">ˈgræmə(r)</span> /
+          </div>
+      </div>
+      <div class="d-flex mt-3">
+          <div class="col-6 text-center h4 align-self-center" >
+              <i class="fa-solid fa-headphones text-primary " style="font-size: 7rem;"></i><br>
+              LISTENING <br> / <span class="text-danger">ˈlɪsənɪŋ</span> /
+          </div>
+          <span style="border-left: 2px solid lightgray;"  class="align-self-center h4 ps-4">Tau kan bule kalau sudah berbicara terkadang seperti "Kumur-kumur". Ada loh trik nya. Disini kamu akan dilatih bagaimana cara memahir <span class="text-primary">NATIVE SPEAKER</span> ketika berbicara</span>
+      </div>
+      <div class="d-flex mt-3">
+          <span style="border-right: 2px solid lightgray;" class="align-self-center text-end h4 pe-4">Masih suka mikir "apa ya rumusnya?" "Apa ya bahasa Inggrisnya?" "Udah bener belum ya?" Tenang, disini kamu akan fokus juga pada <span class="text-primary">CONVERSATION</span> di setiap pertemuannya</span>
+          <div class="col-6 text-center h4 align-self-center" >
+              <i class="fas fa-mug-hot text-primary " style="font-size: 7rem;"></i><br>
+              CONVERSATION <br> / <span class="text-danger">ˌkɑnvərˈseɪʃən</span> /
+          </div>
+      </div>
+    </div>
+    <!-- end penjelasan -->
+
+    <!-- Testimonial -->
+    <div class="testimonial-slider" id="testimonial">
+      <div id="carouselExampleControls" class="carousel carousel-dark">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="testimonial-title">
+                <i class="bi bi-quote display-1"></i>
+                <h2 class="fw-bold display-6">Apa kata mereka tentang Fast Education</h2>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+            <div class="col-md-8">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <div class="card">
+                    <div class="img-wrapper"><img src="https://codingyaar.com/wp-content/uploads/headshot-1-scaled.jpg" class="d-block w-100" alt="..."> </div>
+                    <div class="card-body">
+                      <h5 class="card-title">Card title 1</h5>
+                      <i class="bi bi-star-fill text-warning pe-1"></i>
+                      <i class="bi bi-star-fill text-warning pe-1"></i>
+                      <i class="bi bi-star-fill text-warning pe-1"></i>
+                      <i class="bi bi-star-fill text-warning pe-1"></i>
+                      <i class="bi bi-star-fill text-warning pe-1"></i>
+                      <p class="card-text">Some quick example text to build on the card title and make up
+                        the bulk of the
+                        card's content.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="card">
+                    <div class="img-wrapper"><img src="https://codingyaar.com/wp-content/uploads/headshot-2-scaled.jpg" class="d-block w-100" alt="..."> </div>
+                    <div class="card-body">
+                      <h5 class="card-title">Card title 2</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up
+                        the bulk of the
+                        card's content.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="card">
+                    <div class="img-wrapper"><img src="https://codingyaar.com/wp-content/uploads/headshot-4-scaled.jpg" class="d-block w-100" alt="..."> </div>
+                    <div class="card-body">
+                      <h5 class="card-title">Card title 4</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up
+                        the bulk of the
+                        card's content.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end testimonial -->
+
+    <!-- membuat berbeda  -->
+    <div class="container py-5">
+      <p class="text-center display-5 py-5">Apa yang membuat kami berbeda ?</p>
+      <div class="row justify-content-around">
+        <div class="col-12 col-md-4 text-center">
+          <img src="https://fast-education.com/wp-content/uploads/2023/04/illust01-1024x624.png" style="width: 80%; max-width: 200px;" alt="">
+          <p class="h5 my-2">Bebas pilih Tutor</p>
+          <div class="d-flex justify-content-center">
+            <p style="font-weight: 100; font-size: .9em; max-width: 350px;">Terdapat 30 tutor terbaik sesuai dengan kebutuhanmu dan memiliki pengalaman mengajar +5 tahun</p>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 text-center">
+          <img src="https://fast-education.com/wp-content/uploads/2023/04/illust02-1024x677.png" style="width: 80%; max-width: 200px;" alt="">
+          <p class="h5 my-2">Bebas Pilih Jadwal</p>
+          <div class="d-flex justify-content-center">
+            <p style="font-weight: 100; font-size: .9em; max-width: 350px;">Kamu bisa atur jadwal dengan waktu yang kamu miliki bahkan bisa berganti jadwal sesuai waktu luangmu</p>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 text-center">
+          <img src="https://fast-education.com/wp-content/uploads/2023/04/illust03.png" style="width: 80%; max-width: 200px;" alt="">
+          <p class="h5 my-2">Mahir di Bulan Pertama</p>
+          <div class="d-flex justify-content-center">
+            <p style="font-weight: 100; font-size: .9em; max-width: 350px;">Dengan metode yang fokus pada praktek, sehingga kamu akan terbiasa speaking dan langsung dibimbing oleh tutor pilihanmu</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end membuat berbeda -->
+
+    <!-- suasana belajar -->
+    <div class="container py-5" id="suasana">
+      <div class="display-5 text-center py-5">Susasana praktek dan belajar</div>
+      <div class="row justify-content-center">
+        <div class="col-md-4 text-center align-self-center">
+          <img src="https://fast-education.com/wp-content/uploads/2023/04/l1-min-e1684519082960.jpeg" width="120px" alt=""><br><br>
+          <a href="#" class="btn btn-danger rounded-5 mb-3">Subscribe</a>
+        </div>
+        <div class="col-md-7">
+          <img src="https://cdn2.tstatic.net/tribunnewswiki/foto/bank/images/Logo-YouTube.jpg" alt="" class="w-100">
+          <!-- <iframe  style="width: 100%; height: 400px;" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe> -->
+        </div>
+      </div>
+    </div>
+    <!-- end suasana belajar  -->
+
+    <!-- tutor  -->
+    <div class="bg-light w-100 py-2 my-2" id="tutor">
+      <p class="display-5 text-center my-5 pt-5"> Tutor terbaik dengan pengalaman lebih dari 5 tahun</p>
+      <div class="d-flex flex-column flex-md-row justify-content-around">
+        <div class="col-md-3"><img src="https://fast-education.com/wp-content/uploads/2023/06/4-min-1-1024x1024.png" alt="" class="w-100"></div>
+        <div class="col-md-3"><img src="https://fast-education.com/wp-content/uploads/2023/06/4-min-1-1024x1024.png" alt="" class="w-100"></div>
+        <div class="col-md-3"><img src="https://fast-education.com/wp-content/uploads/2023/06/4-min-1-1024x1024.png" alt="" class="w-100"></div>
+        <div class="col-md-3"><img src="https://fast-education.com/wp-content/uploads/2023/06/4-min-1-1024x1024.png" alt="" class="w-100"></div>
+      </div>
+      <div class="d-flex justify-content-center mt-3 mb-5">
+        <a href="#" class="h3 text-center text-center text-decoration-none"> lihat selengkapnya <span class="h5 ms-3"><i class="fa-solid fa-chevron-right"></i></span></a>
+      </div>
+    </div>
+    <!-- end tutor  -->
+
+    <!-- pricing -->
+    <div class="container my-5 py-3" id="kelas">
+      <div class="display-6 text-center my-2 pb-3">Beragam pilihan kelas</div>
+      <div class="row loop-3">
+        <div class="col-12 col-md-4">
+          <div class="shadow-sm p-2">
+            <!-- <iframe  style="width: 100%;" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe> -->
+            <img src="https://cdn2.tstatic.net/tribunnewswiki/foto/bank/images/Logo-YouTube.jpg" alt="" class="w-100">
+            <h3>Regular Class</h3>
+            <div class="fw-ligther mb-2">12 orang per kelas</div>
+            <h3 class="text-danger" style="text-decoration: line-through red;">Rp. 349K </h3>
+            <h3>Rp. 93K <span class="h6 fw-ligther mb-4">/ 30x Pertemuan</span></h3>
+            <p class="h5 text-secondary" style="height: 150px;">Metode 75% Praktek dan 25% Materi. Tutor akan membimbingmu ketika praktek dengan sistem small group concept</p>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Ketentuan
+                  </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body">
+                    <ol>
+                      <li>Microphone wajib aktif ketika sesi praktek</li>
+                      <li>Biaya tidak hangus jika tidak hadir </li>
+                      <li>Bebas pilih jadwal atau merubah jadwal</li>
+                      <li>Dilarang keras membahas isu politik atau SARA ketika praktek</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                    Bonus
+                  </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body">
+                    <h5>NOTE :</h5>
+                    <p>Bonus lengkap akan dikirim setelah mengisi formulir</p>
+                    <ol>
+                      <li>Garansi mengulang</li>
+                      <li>Free 60x Written Class</li>
+                      <li>Free 10x Pronunciation Class</li>
+                      <li>Gratis konsultasi langsung dengan tutor</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                    Materi
+                  </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body">
+                    <h5>NOTE :</h5>
+                    <p>Syllabus akan dikirim via WhatsApp sesuai level-mu setelah mengisi formulir</p>
+                    <ol>
+                      <li>GRAMMAR FOR SPEAKING</li>
+                      <li>PRONUNCIATION</li>
+                      <li>VOCABULARY</li>
+                      <li>SPEAKING PRACTICE</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-grid my-2">
+              <a href="#" class="btn bg-accent text-white">Daftar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end pricing -->
+    <footer>
+        <div class="container">
+          <div class="row">
+            <div class="col-12 mt-4 col-md-3">
+              <h3 class="fw-bold">Fast English</h3>
+              <h5>PT. REVOLUSI BAROKAH</h5>
+              <div class="d-flex my-1"><i class="fa-solid fa-envelope me-3 text-accent" style="width: 20px;"></i>admin@fast-education.com</div>
+              <div class="d-flex my-1"><i class="fa-brands fa-whatsapp me-3 text-accent"  style="width: 20px;"></i>0812-9262-0346</div>
+              <div class="d-flex my-1"><i class="fa-solid fa-map-location-dot me-3 text-accent"  style="width: 20px;"></i>Perum Griya Asri Blok A4 No. 5 Kel. Ciseureuh Kec. Purwakarta Kab. Purwakarta, Jawa Barat 41118</div>
+            </div>
+            <div class="col-12 mt-4 col-md-3">
+              <h4 class="fw-ligther">Kelas Lainnya</h4><br>
+              <a href="#kelas" class="text-secondary btn">Regular Class (12-15 orang)</a><br>
+              <a href="#kelas" class="text-secondary btn">Semi Private (4-6 orang)</a><br>
+              <a href="#kelas" class="text-secondary btn">Private Class (1 on 1)</a><br>
+            </div>
+            
+            <div class="col-12 mt-4 col-md-3">
+              <h4 class="fw-ligther">More Information</h4><br>
+              <a href="#tutor" class="text-secondary btn">Tutor kami</a><br>
+              <a href="#suasana" class="text-secondary btn">Suasana Belajar</a><br>
+              <a href="#" class="text-secondary btn">Member Area</a><br>
+              <a href="#" class="text-secondary btn">konsultasi</a><br>
+              <a href="#testimonial" class="text-secondary btn">Testimoni</a><br>
+              <a href="#kelas" class="text-secondary btn">Informasi Jadwal</a><br>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <script>
+        var multipleCardCarousel = document.querySelector("#carouselExampleControls");
+
+        if (window.matchMedia("(min-width: 576px)").matches) {
+        var carousel = new bootstrap.Carousel(multipleCardCarousel, {
+            interval: false
+        });
+        var carouselWidth = $(".carousel-inner")[0].scrollWidth;
+        var cardWidth = $(".carousel-item").width();
+        var scrollPosition = 0;
+        $("#carouselExampleControls .carousel-control-next").on("click", function () {
+            if (scrollPosition < carouselWidth - cardWidth * 3) {
+            scrollPosition += cardWidth;
+            $("#carouselExampleControls .carousel-inner").animate(
+                { scrollLeft: scrollPosition },
+                600
+            );
+            }
+        });
+        $("#carouselExampleControls .carousel-control-prev").on("click", function () {
+            if (scrollPosition > 0) {
+            scrollPosition -= cardWidth;
+            $("#carouselExampleControls .carousel-inner").animate(
+                { scrollLeft: scrollPosition },
+                600
+            );
+            }
+        });
+        } else {
+        $(multipleCardCarousel).addClass("slide");
+        }
+
+      </script>
+      <script>
+        $(window).scroll(function() {
+    var nav = $('nav');
+    var top = 80;
+    if ($(window).scrollTop() >= top) {
+
+        nav.addClass('shadow');
+
+    } else {
+        nav.removeClass('shadow');
+    }
+});
+      </script>
+      <script src="../static/js/main.js"></script>
+</div>
+{% endblock %}

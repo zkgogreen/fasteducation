@@ -1,0 +1,85 @@
+<div class="menu" >
+    <div class="text-muted">
+        <div class="container py-4">
+            <h3 class="text-light text-muted">{{enroll.percent}}%</h3>
+            <div class="progress rounded-0"  role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 10px">
+                <div class="progress-bar" style="width: {{enroll.percent}}%"></div>
+            </div>
+        </div>
+        <div class="accordion" id="accordionExample">
+            {% for bab in bab %}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="d-flex accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ bab.bab_module.id }}" aria-expanded="false" aria-controls="collapse{{ bab.bab_module.id }}">
+                    {{bab.bab_module.bab}} {% if bab.bab_module.isdone %}<i class="fas fa-check ms-3 text-success-emphasis"></i>{% endif %} {% if bab.bab_module.premium %} <i class="fas fa-crown text-warning ms-3"></i> {% endif %}
+                </button>
+              </h2>
+              <div id="collapse{{ bab.bab_module.id }}" class="accordion-collapse collapse {% if bab.bab_module == current_bab %}show{% endif %}" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% for bab_pelajaran in bab.pelajaran %}
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            {% if bab_pelajaran.allow_next and bab.allow_next %}
+                            <a href="{% url 'modul:modul' slug=slug urutan_bab=bab.bab_module.urutan urutan_pelajaran=bab_pelajaran.pelajaran.urutan %}"
+                               class="{% if bab_pelajaran.judul == pelajaran.judul and halaman == 'pelajaran' and pelajaran.bab == bab.bab_module.bab %}fw-bold{% endif %} my-wrap text-decoration-none text-dark">
+                                <span class="{% if bab_pelajaran.pelajaran == current_pelajaran %}text-primary{% endif %} fw-semibold">{{bab_pelajaran.pelajaran.judul}}</span>
+                            </a>
+                            {% else %}
+                            <span class="fw-semibold my-wrap text-secondary my-1" style="cursor: pointer;">{{bab_pelajaran.pelajaran.judul}}</span>
+                            {% endif %}
+                        </div>
+                        {% if bab_pelajaran.isdone %}<h6 class="fw-light align-self-center mt-2"><i class="fas fa-check text-success"></i></h6>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <h6 class="align-self-center mt-2" style="width: 10px;"><i class="fa-solid fa-list-check text-muted"></i></h6>
+                            <a href="{% url 'modul:rangkuman' slug=slug urutan_bab=urutan_bab %}" class="btn ms-2 {% if current_bab == bab.bab_module and current_pelajaran == None %}fw-bold text-primary{% endif %}">Rangkuman</a>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <h6 class="align-self-center mt-2" style="width: 10px;"><i class="fa-solid fa-flag-checkered text-muted"></i></h6>
+                            <a href="{% url 'modul:koridor_soal' slug=slug urutan_bab=urutan_bab %}" class="btn ms-2 {% if halaman == 'soal' and pelajaran.bab == bab.bab_module.bab %}fw-bold{% endif %}">Latihan soal</a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% comment %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="handlinglast">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLast" aria-expanded="false" aria-controls="collapseLast">
+                      Penutup
+                  </button>
+                </h2>
+                <div id="collapseLast" class="accordion-collapse collapse  {% if halaman == 'rangkumankelas' or halaman == 'soal_kelas' %}show{% endif %}" aria-labelledby="handlinglast" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                      <div class="d-flex justify-content-between">
+                          <div class="d-flex">
+                            <div class="d-flex">
+                                <h6 class="align-self-center mt-2" style="width: 10px;"><i class="fa-solid fa-list-check text-muted"></i></h6>
+                                <a href="{% url 'modul:rangkuman_kelas' slug=slug %}" class="btn ms-2 {% if halaman == 'rangkumankelas' %}fw-bold{% endif %}">Rangkuman</a>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                          <div class="d-flex">
+                              <h6 class="align-self-center mt-2" style="width: 10px;"><i class="fa-solid fa-flag-checkered text-muted"></i></h6>
+                              <a href="#" class="btn fw-light ms-2 {% if halaman == 'soal_kelas' %}fw-bold{%endif%}">Ujian</a>
+                          </div>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                          <div class="d-flex">
+                              <h6 class="align-self-center mt-2" style="width: 10px;"><i class="fa-solid fa-certificate text-muted"></i></h6>
+                              <a href="#" class="btn fw-light ms-2">Hasil</a>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+            {% endcomment %}
+          </div>
+    </div>
+</div>

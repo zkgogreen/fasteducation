@@ -1,0 +1,26 @@
+{% load custom_tags %}
+<div class="topbar bg-white text-primary shadow-sm" id="topbar">
+    <div class="d-flex justify-content-between justify-content-md-start flex-md-row-reverse">
+        <div class="d-flex flex-md-row-reverse">
+          <div class="dropdown mx-2">
+            <a class="btn btn-sm btn-outline-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="rounded-img">
+              <img src="/media/{% if user.photo %}{{ user.photo }}{% else %}/profile/image{% random_int 1 24 %}.jpg{% endif %}" alt="profile">
+            </div>
+            </a>
+            <ul class="dropdown-menu py-3">
+              {% if user.teacher %} <li><a class="dropdown-item h5 fw-light" href="{% url 'user:changeteacher' %}">Beralih ke mentor</a></li>{% endif %}
+              {% if user.teacher %} <li><a class="dropdown-item h5 fw-light" href="{% url 'teacher:setting' %}">Teacher Setting</a></li>{% endif %}
+              <li><a class="dropdown-item h5 fw-light" href="#">Profile</a></li>
+              <li><a class="dropdown-item h5 fw-light" href="{% url 'kelas:upgrade' %}">Upgrade</a></li>
+              <li><a class="dropdown-item h5 fw-light" href="{% url 'account_logout' %}">Logout</a></li>
+            </ul>
+          </div>
+            <p class="p-4 h5 ">{% if user.user.first_name %}{{user.user.first_name}} {{user.user.last_name}}{% else %}ubah profile{% endif %} </p>
+        </div>
+        <div class="d-flex h4 text-primary me-4">
+          <a href="{% url 'pesan:index' %}" class="align-self-center me-4"> <i class="fa-regular fa-message"></i></a>
+          <a href="#" class=" align-self-center"><i class="fa-regular fa-bell"></i></a>
+        </div>
+    </div>
+</div>

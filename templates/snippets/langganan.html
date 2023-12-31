@@ -1,0 +1,45 @@
+
+{% load humanize %}
+<!-- modal langganan  -->
+<div class="modal fade" id="langganan" tabindex="-1" role="dialog" aria-labelledby="langgananLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+        <div class="modal-body">
+            <div class="d-flex w-100 justify-content-end mb-3">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="row justify-content-around">
+            <div class="col-md-5">
+                <ul>
+                <li>Berdiskusi dengan mentor</li>
+                <li>Akses Kelas Premium</li>
+                <li>Unlimited test kemampuan</li>
+                <li>Sertifikat Kemampuan</li>
+                </ul>
+            </div>
+            <div class="col-md-7">
+                <form action="{% url 'kelas:premium' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row justify-content-center">
+                        {% for i in langganan %}
+                        <div class="col-6">
+                            <div class="m-2">
+                                <input type="radio" class="btn-check" name="id" value="{{i.id}}" id="{{i.id}}" autocomplete="off">
+                                <label class="btn btn-outline-primary w-100 text-start" for="{{i.id}}">
+                                    <h3>{{i.durasi}} Bulan</h3>
+                                    <p>Rp. {{i.diskon|cut:"000"|intcomma}}K</p>
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-grid m-2">
+                        <button type="submit" class="btn btn-primary w-100">Langganan</button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

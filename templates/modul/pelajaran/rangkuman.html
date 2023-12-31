@@ -1,0 +1,13 @@
+{% extends 'modul/kelas/pelajaran/base.html' %}
+
+{% block content %}
+<div class="isi bg-white">
+    <div class="container my-4">
+        {% if halaman == 'rangkumankelas' %}
+            {{ kelas.rangkuman|safe }}
+        {% else %}
+            {{pelajaran.bab_kelas.rangkuman|safe}}
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

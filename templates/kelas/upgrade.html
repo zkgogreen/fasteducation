@@ -1,0 +1,129 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load humanize %}
+{% block head %}
+{% endblock head %}
+{% block title %}Upgrade{% endblock %}
+{% block css %}
+<style>
+.images{
+    position: relative;
+}
+.images > img {
+    width: 80%;
+}
+.bottom-left {
+  position: absolute;
+  bottom: 10%;
+  left:15%;
+}
+.text {
+  white-space: nowrap; 
+  width: 100%; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+</style>
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="my-4 container">
+        <div class="display-4 fw-semibold text-center my-2 pb-3">Belajar dengan tutor</div>
+        <div class="row ">
+            {% for p in paket %}
+            <div class="col-12 col-md-3">
+                <div class="shadow bg-white m-2">
+                    <img src="/media/{{p.foto}}" alt="" class="w-100" style="height: 200px; object-fit: cover;">
+                    <div class="p-2">
+                        <h5 class="text-uppercase fw-bold">{{p.nama}}</h5>
+                        <div class="fw-ligther mb-2">{{p.siswa}} orang per kelas</div>
+                        {% if p.discount != p.biaya %}<h5 class="text-danger" style="text-decoration: line-through red;">Rp. {{p.biaya|cut:"000"|intcomma}}K</h5>{% endif %}
+                        <h5>Rp.{{p.discount|cut:"000"|intcomma}}K<span class="h6 fw-ligther mb-4">/{{p.pertemuan}}x Pertemuan</span></h5>
+                        <p class="text-secondary">{{p.keterangan}}</p>
+                    </div>
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-{{p.id}}" aria-expanded="false" aria-controls="flush-{{p.id}}">
+                            Ketentuan
+                        </button>
+                        </h2>
+                        <div id="flush-{{p.id}}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <ol>
+                            {% for k in p.ketentuans %}
+                            <li>{{k}}</li>
+                            {% endfor %}
+                            </ol>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-two{{p.id}}" aria-expanded="false" aria-controls="flush-two{{p.id}}">
+                            Bonus
+                        </button>
+                        </h2>
+                        <div id="flush-two{{p.id}}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <h5>NOTE :</h5>
+                            <p>Bonus lengkap akan dikirim setelah mengisi formulir</p>
+                            <ol>
+                            {% for k in p.bonuses %}
+                            <li>{{k}}</li>
+                            {% endfor %}
+                            </ol>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-tri{{p.id}}" aria-expanded="false" aria-controls="flush-tri{{p.id}}">
+                            Materi
+                        </button>
+                        </h2>
+                        <div id="flush-tri{{p.id}}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <h5>NOTE :</h5>
+                            <p>Syllabus akan dikirim via WhatsApp sesuai level-mu setelah mengisi formulir</p>
+                            <ol>
+                            {% for k in p.materis %}
+                            <li>{{k}}</li>
+                            {% endfor %}
+                            </ol>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="d-grid my-2">
+                        <a href="{% url 'kelas:confirm' id=p.id %}" class="btn btn-primary rounded-0">Daftar</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+    const kelas = document.getElementsByClassName("kelas");
+    const link  = document.getElementsByClassName("link")
+    const info  = document.getElementsByClassName("info")
+
+    for(let i=0;i<kelas.length;i++){
+        kelas[i].addEventListener("mouseenter", function(){
+            link[i].classList.toggle("d-none")
+            info[i].classList.toggle("d-none")
+        })
+        kelas[i].addEventListener("mouseleave", function(){
+            link[i].classList.toggle("d-none")
+            info[i].classList.toggle("d-none")
+        })
+    }
+</script>
+{% endblock script %}

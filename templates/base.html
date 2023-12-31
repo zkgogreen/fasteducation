@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../media/{{config.icon}}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>{% block title %}FastEnglish{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        .fc .fc-col-header-cell-cushion {
+          display: inline-block;
+          padding: 2px 4px;
+          text-decoration: none;
+        }
+        .fc .fc-col-header-cell-cushion { /* needs to be same precedence */
+          padding-top: 5px; /* an override! */
+          padding-bottom: 5px; /* an override! */
+          color: blue;
+        }
+        .fc-daygrid-day-number {
+          text-decoration: none;
+          font-weight: 900;
+          color: lightblue;
+        }
+      </style>
+    {% block css %}{% endblock %}
+</head>
+<body>
+  {% include 'snippets/langganan.html' %}
+  {% block navigation %} {% endblock %}
+  {% block content %} {% endblock %}
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+ </html>

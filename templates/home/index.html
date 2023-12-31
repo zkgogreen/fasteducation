@@ -1,0 +1,166 @@
+{% extends 'dashboard.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block title %}index{% endblock %}
+{% block style %}
+<style>
+  .modal-dialog {
+    pointer-events: unset !important;
+  }.modal-backdrop {
+    z-index: -1;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="content">
+  <div class="row">
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class=" bg-white shadow p-2 m-1 rounded-3 w-100" style="height: 80px;">
+            <h4>{% if me.premium %}Premium{% else %}FREE{% endif %}</h4>
+            <a href="{% url 'kelas:upgrade' %}" class=" text-decoration-none text-primary d-flex justify-content-between w-100">Upgrade <i class="fa-solid fa-angle-right"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class=" bg-white shadow p-2 m-1 rounded-3 w-100" style="height: 80px;">
+            <h4>Level</h4>
+            <div class="text-primary d-flex justify-content-between">{{me.level.name}} <i class="fa-solid fa-angle-right"></i></div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class=" bg-white shadow p-2 m-1 rounded-3 w-100" style="height: 80px;">
+            {% if mentor.mentor %}
+            <div class="d-flex justify-content-between w-100">
+              <div class="lh-1">
+                <h4>Mentor</h4>
+                <div style="line-height: 2px;">
+                  <span class="text-muted text-uppercase h4">{{mentor.mentor.first_name}} {{mentor.mentor.last_name}}</span><br>
+                  <div class="text-secondary fw-semibold ms-1">{{mentor.start|date:"d M"}} - {{mentor.end|date:"d M"}} </div>
+                </div>
+              </div>
+              <a href="#" class="align-self-center h3 text-primary"><i class="fas fa-message"></i></a>
+            </div>
+            {% else %}
+            <h4>Mentor</h4>
+            <a href="{% url 'kelas:index' %}" class=" text-primary text-decoration-none d-flex justify-content-between w-100">Cari mentor <i class="fa-solid fa-angle-right"></i></a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class=" bg-white shadow p-2 m-1 rounded-3 w-100" style="height: 80px;">
+            <h4>Kelas</h4>
+            {% if kelas %}
+            {% else %}
+            <a href="{% url 'modul:index' %}" class=" text-decoration-none text-primary d-flex justify-content-between w-100">Cari Kelas <i class="fa-solid fa-angle-right"></i></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6  my-3">
+          <div class="d-flex justify-content-between mx-3">
+            <h3>Pelajaran</h3>
+            <a href="{% url 'modul:index' %}" class="text-primary align-self-center text-decoration-none">Lihat Semua</a>
+          </div>
+          <div class="d-flex flex-column gap-2 ">
+            {% if enroll %}
+            {% for modul in enroll %}
+            <a class="bg-white shadow-sm rounded-3 d-flex text-decoration-none" style="height: 80px;"  href="{% url 'modul:modul' slug=modul.module.slug urutan_bab=modul.bab_module.urutan urutan_pelajaran=modul.pelajaran.urutan %}">
+              <img src="/media/{{modul.module.photo}}" style="width: 120px; height: 100%; object-fit: cover; border-top-left-radius: 9px; border-bottom-left-radius: 9px" alt="profile">
+              <div class="col d-flex flex-column px-2 align-self-center">
+                <h4 class="fw-semibold text-primary lh-1">{{modul.module.nama}}</h4>
+                <p class="text-muted lh-1">{{modul.pelajaran.judul}}</p>
+                <div class="progress" style="height: 4px;">
+                  <div class="progress-bar" role="progressbar" style="width: {{modul.percent}}%;" aria-valuenow="{{modul.percent}}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class=" h3 align-self-center px-2"><i class="fa-solid fa-chevron-right"></i></div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="d-flex flex-column text-center bg-white rounded-3">
+              <div class="text-center" style="mix-blend-mode: multiply;">
+                <img src="/media/char/empty.jpg" style="mix-blend-mode: multiply; width: 80%;" alt="">
+              </div>
+              <a href="{% url 'modul:index' %}" class="btn btn-primary m-4">Cari Kelas</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6  my-3">
+          <div class="d-flex justify-content-between mx-3">
+            <h3>Mentor</h3>
+            <a href="{% url 'modul:index' %}" class="text-primary align-self-center text-decoration-none">Upgrade</a>
+          </div>
+          <div class="d-flex flex-column gap-2 ">
+            {% for mentor in mentor %}
+            <a class="bg-white shadow-sm rounded-3 d-flex text-decoration-none" style="height: 80px;"  href="#">
+              <img src="/media/{% if user.photo %}{{ mentor.photo }}{% else %}/profile/image{% random_int 1 24 %}.jpg{% endif %}" style="width: 70px; height: 70px; object-fit: cover;" class="align-self-center ms-2" alt="profile">
+              <div class="col d-flex flex-column px-2 align-self-center" >
+                <h4 class="fw-semibold text-primary ">{{mentor.user.first_name}} {{mentor.user.last_name}}</h4>
+                <div  style="line-height: 10px;" class="d-flex">
+                  <span class="text-muted ">{{mentor.Userteacher.mastered.name}}</span>
+                  <i class="fa-solid fa-circle align-self-center mx-2 mb-1" style="font-size: 5px;"></i>
+                  <span class="align-self-center mb-2"> {% if mentor.Userteacher.ratting == None %} 0 {% else %}{{mentor.Userteacher.ratting}}{% endif %} <i class="fas fa-star text-warning align-self-center"></i></span>
+                  
+                </div>
+              </div>
+              <div class="h4 align-self-center px-2"><i class="fa-solid fa-circle-plus"></i></div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      {% if not me.premium %}
+        <div class="d-flex flex-column gap-2 w-100 bg-white rounded-3 shadow-sm text-center p-2">
+          <img src="/media/char/upgrade.jpg" alt="upgrade">
+          <span>Akses semua kelas sekarang</span>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#langganan">Upgrade</button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}
+{% block script %}
+<script>
+function perbarui(id){
+  getid = document.getElementsByClassName("id_userroom");
+  for(var i=0; i<getid.length;i++){
+    getid[i].value = id;
+  }
+}
+</script>
+{% if today %}
+<script>
+var time              = document.getElementById("time");
+var countdownElement  = document.getElementById("gettime");
+function updateCountdown() {
+    var now = new Date();
+
+    var initialTime = countdownElement.innerText.split(":");
+    var targetHours = parseInt(initialTime[0]);
+    var targetMinutes = parseInt(initialTime[1]);
+    var targetTime = new Date();
+    targetTime.setHours(targetHours, targetMinutes-3, 0, 0);
+
+    var timeDiff = targetTime - now;
+
+    if (timeDiff <= 0) {
+        time.innerHTML = 'Buka Zoom';
+        time.classList.remove("disabled")
+    } else {
+        var hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+        time.innerHTML = hours + 'h ' + minutes + 'm ' + seconds + 's';
+    }
+}
+setInterval(updateCountdown, 1000);
+</script>
+{% endif %}
+{% endblock script %}

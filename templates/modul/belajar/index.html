@@ -1,0 +1,11 @@
+{% extends 'modul/belajar/base.html' %}
+
+{% block content %}
+<div class="isi bg-white">
+    <div class="container my-4">
+        <div class="my-2 display-5 fw-bold">{{pelajaran.bab_kelas.bab}}</div>
+        <div class="mt-2 mb-5 display-6">{{pelajaran.judul}}</div>
+        {{pelajaran.text|safe}}
+    </div>
+</div>
+{% endblock content %}

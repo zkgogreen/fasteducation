@@ -1,0 +1,193 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    <link rel="icon" type="image/x-icon" href="http://{{request.get_host}}/{{icon}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pelajaran.css' %}">
+  </head>
+  <body>
+    <div class="topbar shadow bg-white">
+        <div class="d-flex justify-content-between container-fluid">
+            <div class="d-flex ">
+                <a href="{% url 'kelas:index' %}" class="btn mt-2 align-self-center"><h4><i class="fas fa-arrow-left me-3"></i></h4></a>
+                <div id="title" class="align-self-center h4 fw-light">{{lesson.bab_kelas.bab}}</div>
+            </div>
+            <div class="d-flex me-3">
+                <div class="btn align-self-center d-none d-md-block">
+                    <div class="input-group ">
+                        <input type="text" class="form-control" placeholder="cari" >
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+                <h3 id="closeSearch" class="align-self-center me-3 d-none"><i class="fas fa-times"></i></h3>
+                <div id="comment" class="btn align-self-center" data-bs-toggle="modal" data-bs-target="#modalcomment"><i class="fa-regular fa-comment"></i></div>
+                <div id="search" class="btn align-self-center  d-block d-md-none"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div id="menu" class="btn align-self-center"><i class="fa-solid fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+    <div id="pelajaran">
+        {% block content %}{% endblock content %}
+        {% include 'modul/pelajaran/sidebar.html' %}    
+    </div>
+
+    {% include 'modul/pelajaran/footer.html' %}
+
+    <!-- modal -->
+    {% if halaman == 'pelajaran'  %}
+    <div class="modal fade" id="modalcomment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered ">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Komentar kelas</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for komentar in komentar %}
+                <div class="d-flex">
+                    <div class="rounded-img">
+                        <img src="{% static komentar.user_info.photo %}" alt="profile">
+                    </div>
+                    <div class="d-flex flex-column align-self-center ms-2">
+                        <a href="#" class="fw-semibold text-primary text-decoration-none" style="margin-bottom: -5px;">{{komentar.user.first_name}} {{komentar.user.last_name}}</a>
+                        <p>{{komentar.question}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer bg-light p-0 m-0">
+                {% comment %}
+                <form action="{% url 'user:komentar' id_pelajaran=pelajaran.id %}" method="post" class="w-100">
+                    <div class="input-group">
+                        {% csrf_token %}
+                        {{ FormKomentar }}
+                        <button type="submit" class="input-group-text rounded-0" id="pesan" ><i class="fa-regular fa-paper-plane"></i></button>
+                    </div>
+                </form>
+                {% endcomment %}
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- endmodal -->
+    {% endif %}
+    
+<!-- modal question -->
+{% if question %}
+<div class="modal fade" id="modalQuestion" tabindex="-1" aria-labelledby="modalQuestionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalQuestionLabel">{{question.lesson.judul}}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <h3>{{question.soal}}</h3>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="bagian" value="latihan">
+                <input type="hidden" name="id" value="{{question.id}}">
+                <div class="d-flex flex-column">
+                    {% for l in question.questionList %}
+                    <input type="submit" class="btn btn-outline-dark btn-lg rounded-0 my-2" style="min-width: 150px;" name="answer" value="{{l}}">
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- end modal question  -->
+
+<!-- modal message  -->
+
+{% if messages %}
+<div class="modal fade show" id="modalmessage" tabindex="-1" aria-labelledby="modalmessageLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalmessageLabel">Salah</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script>
+    const menu = document.getElementById("menu");
+    const pelajaran = document.getElementById("pelajaran");
+    const search = document.getElementById("search");
+    const closeSearch = document.getElementById("closeSearch");
+    const comment = document.getElementById("comment");
+    const title = document.getElementById("title");
+    const table = document.getElementsByTagName("table")
+    const btnTry = document.getElementById("btn-try")
+    const btnNext = document.getElementById("btn-next")
+    const countdownElement = document.getElementById("countdownElement")
+    menu.addEventListener('click', function(){
+        pelajaran.classList.toggle("active");
+    })
+    search.addEventListener('click', function(){
+        this.parentElement.children[0].classList.toggle("d-none");
+        this.classList.toggle("d-none");
+        this.parentElement.children[0].children[0].children[0].focus();
+        title.classList.toggle("d-none");
+        comment.classList.toggle("d-none");
+        closeSearch.classList.toggle("d-none");
+    })
+    closeSearch.addEventListener('click', function(){
+        search.parentElement.children[0].classList.toggle("d-none");
+        search.classList.toggle("d-none");
+        title.classList.toggle("d-none");
+        comment.classList.toggle("d-none");
+        this.classList.toggle("d-none");
+    })
+
+    for(var i=0; i<table.length; i++){
+        table[i].classList.add("table");
+        table[i].classList.add("table-sm");
+        table[i].classList.add("table-bordered");
+        table[i].classList.add("table-hover");
+    }
+
+    function updateCountdown(seconds) {
+    countdownElement.innerHTML = `Countdown: ${seconds} seconds`;
+    
+        if (seconds === 0) {
+            btnTry.classList.add("d-none");
+            btnNext.classList.remove("d-none");
+            countdownElement.innerHTML = ""; // Remove countdown text when it reaches 0
+        } else {
+            setTimeout(() => {
+            updateCountdown(seconds - 1);
+            }, 1000); // Update the countdown every 1 second (1000 milliseconds)
+        }
+    }
+
+    // Start the countdown when the page loads (you can trigger it in response to an event as well)
+    updateCountdown(10);
+</script>
+<script>
+$(window).on('load', function() {
+    $('#modalmessage').modal('show');
+});
+</script>
+<script src="{% static 'vendor/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

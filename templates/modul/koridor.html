@@ -1,0 +1,122 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block title %}Koridor{% endblock %}
+{% block css %}
+{% endblock css %}
+{% block content %}
+<div class="content">
+    <div class="mt-2 mb-5">
+        {% if not user.premium and kelas.premium %}
+        <div class="shadow rounded-3 d-flex p-4 mb-5 bg-primary bg-opacity-25">
+            <div class="display-4 m-4 align-self-center">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3>Akun anda belum premium</h3>
+                <h5>Langganan sekarang dan dapatkan experience nya</h5>
+                <div>
+                    <a href="{% url 'kelas:upgrade' %}" class="btn btn-primary rounded-0 px-5">Langganan sekarang</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="d-flex justify-content-between">
+            <div class="h2 fw-bold">Belajar {{module.nama}}</div>
+            <div class="d-flex gap-2">
+                {% if enroll.finish and not enroll.like %} <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn align-self-center btn-dark rounded-0 fw-semibold">Berikan Nilai</button>{% endif %}
+                {% if enroll.enroll and enroll.finish %} <a href="#" class="btn align-self-center btn-dark rounded-0 fw-semibold {% if not enroll.like and not enroll.feed %}disabled{% endif %}">Cetak Sertifikat</a> {% endif %}
+                {% if enroll.enroll %}
+                <a href="{% url 'modul:modul' slug=slug urutan_bab=enroll.bab_module.urutan urutan_pelajaran=enroll.pelajaran.urutan  %}" class="text-uppercase btn align-self-center btn-dark rounded-0 fw-semibold">Lanjutkan</a>
+                {% else %}
+                <form method="post">{% csrf_token %} <input {% if not user.premium and kelas.premium %}disabled{%endif%} type="submit" value="Daftar" name="daftar" class="btn btn-lg fw-semibold btn-dark rounded-0 shadow"></form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="bg-white shadow-sm p-3 my-4 rounded-2 card">
+            <div class=" h3 fw-bold">{{enroll.dipelajari}} ({{enroll.percent}}%) sudah dipelajari</div>
+            <div class="row">
+                <div class="fw-semibold text-muted h5 align-self-center col-12 col-md">{{module.bab}} topik, {{module.pelajaran}} pelajaran</div>
+                <div class="align-self-center text-muted col-md-3 col-12">
+                    <i class="fas fa-eye ms-1 me-1"></i>{{module.see}}
+                    <i class="fas fa-user ms-2 me-1"></i>{{module.subscribe}}
+                    <i class="fas fa-check ms-2 me-1"></i>{{module.finish}}
+                    <i class="fas fa-message ms-2 me-1"></i>{{module.feedback}}
+                    <i class="fas fa-star text-warning me-1 ms-3"></i>{% if kelas.ratting == None %}0.0{%else%}{{ kelas.ratting}}{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="shadow-sm my-4 rounded-2 card">
+            <div class="card-header fw-bold h3"><i class="fa-solid fa-book text-primary me-3"></i>Riwayat Soal</div>
+            <div class="p-3">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Topik</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Nilai</th>
+                            <th scope="col">Lihat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for latih in latihan %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <th scope="row">{% if latih.bab_kelas %}{{latih.bab_kelas}}{% else %}Ujian{% endif %}</th>
+                            <td>{{latih.tanggal|date:"d/m/Y"}}</td>
+                            <td class="text-{% if latih.nilai >= 80 %}success{% else %}danger{% endif %} fw-bold">{{latih.nilai}}</td>
+                            <td><a href="{% url 'user:pembahasan' id=latih.id %}" class="btn btn-outline-dark rounded-0 btn-sm">Detail</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="shadow-sm my-4 rounded-2 card">
+            <div class="card-header fw-bold h3"><i class="fa-solid fa-people-group text-info me-3"></i>Forum</div>
+            <div class="p-3">
+                <div class="d-flex h4 fw-bold mb-4"><div class="col-8">Apa kata mereka ?</div><div class="col-4 text-center">Kategori</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">Susah nagengr </div><div class="col-4 text-center align-self-center ">Pengenalan</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">di isi apa yah</div><div class="col-4 text-center align-self-center ">Pengenalan 2</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">gak tau</div><div class="col-4 text-center align-self-center">Pengenalan 3</div></div>
+            </div>
+        </div>
+        
+        <div class="shadow-sm my-4 rounded-2 card">
+            <div class="card-header fw-bold h3"><i class="fas fa-star text-warning me-3"></i> Ratting</div>
+            <div class="p-3">
+                <div class="d-flex h4 fw-bold mb-4"><div class="col-8">Feedback</div><div class="col-4 text-center">Ratting</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">Susah nagengr </div><div class="col-4 text-center align-self-center ">5/5</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">di isi apa yah</div><div class="col-4 text-center align-self-center ">2/5</div></div>
+                <div class="d-flex fw-bold mb-2"><div class="col-8">gak tau</div><div class="col-4 text-center align-self-center">3/5</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block modal %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock modal %}
+{% block script %}
+{% endblock script %}

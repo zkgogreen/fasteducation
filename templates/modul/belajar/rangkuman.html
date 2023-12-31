@@ -1,0 +1,9 @@
+{% extends 'modul/belajar/base.html' %}
+
+{% block content %}
+<div class="isi bg-white">
+    <div class="container my-4">
+        {{current_bab.rangkuman|safe}}
+    </div>
+</div>
+{% endblock content %}
