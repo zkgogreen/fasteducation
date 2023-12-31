@@ -1,0 +1,4 @@
+Django==5.0
+django_ckeditor==6.7.0
+midtransclient==1.4.2
+Requests==2.31.0
