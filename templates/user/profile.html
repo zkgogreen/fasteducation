@@ -1,0 +1,44 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="rounded-3 bg-white shadow-sm p-3 text-center">
+                <img  src="/media/{{profile.photo}}" alt="" style="width: 80%;">
+                <h5>{{profile.user.first_name}} {{profile.user.last_name}}</h5>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex flex-column gap-2 w-100">
+                {% for kelas in kelas %}
+                <div class="w-100 bg-white shadow-sm rounded-2 p-2">
+                    <div class="d-flex">
+                        <div class="bg-primary text-center px-2 text-white rounded-2 h-100 align-self-center">
+                            <h6 >{{kelas.mulai|date:'d M'}} <br> {{kelas.get_jadwal_display}}</h6>
+                        </div>
+                        <div class="col ms-3">
+                            <h5>{{kelas.program.nama}} </h5>
+                            <h6>{{kelas.peserta}} / {{kelas.program.siswa}} Peserta</h6>
+                        </div>
+                        <div class="span align-self-center">
+                            {% if otherUser %}
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{kelas.id}}">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Ikuti Kelas</button>
+                            </form>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#langganan"><i class="fas fa-plus me-2"></i>Ikuti Kelas</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor kelas %}
+                <a href="#" class="btn btn-primary">buat jadwal</a>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

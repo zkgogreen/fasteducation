@@ -112,7 +112,7 @@ def begin(request):
         mentor_obj_list = []
         for u in range(5):
             mentor = user_root.objects.create_user(username="mentor_"+str(u), email="mentor_{}@localhost".format(u), first_name="mentor", last_name="ke-"+str(u), password="mentor1234")
-            mentor_obj = Users.objects.create(user=mentor, teacher=True)
+            mentor_obj = Users.objects.create(user=mentor, teacher=True, photo=f'/profile/image{random.randint(1,24)}.jpg')
             mentor_list.append(mentor)
             mentor_obj_list.append(mentor_obj)
             Teacher.objects.create(user=mentor, mastered=mater_list[random.randint(0,1)])
@@ -120,7 +120,7 @@ def begin(request):
         kelas_list = []
         for m in mentor_list:
             for c in range(random.randint(1,5)):
-                kelas = buatKelas(user=m,program=Program_list[random.randint(1,4)], jam=random.randint(0,7), jadwal=random.randint(0,2), mulai=random_date("2023-01-01", "2023-12-29").strftime("%Y-%m-%d"))
+                kelas = buatKelas(user=m,program=Program_list[random.randint(1,4)], jam=random.randint(0,7), jadwal=random.randint(0,2), mulai=random_date("2024-01-01", "2024-01-30").strftime("%Y-%m-%d"))
                 kelas_list.append(kelas)
 
         user_purchased = []

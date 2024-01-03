@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from akun.models import Users
 from modul.models.modul import Module, Pelajaran, Bab, Soal
 from modul.models.user import Enroll, UserLatihan, UserPelajaran, UserBab
-from modul.utils import bab_navigate, enroll
-from modul.forms import FormKomentar
+from modul.utils import bab_navigate, enroll as subscribe
+from modul.forms import FormKomentar, CreateModule
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
@@ -25,7 +25,7 @@ def koridor(request, slug):
         return redirect("modul:koridor", slug=slug)
     
     if request.method == "POST":
-        enrollMessage = enroll(request, slug)
+        enrollMessage = subscribe(request, slug)
         messages.success(request, "anda berhasil mendaftar di "+enrollMessage.nama)
         return redirect("modul:koridor", slug=slug)
     return render(request, 'modul/koridor.html', context)
@@ -67,3 +67,49 @@ def rangkuman(request, slug, urutan_bab):
 def koridor_soal(request, slug, urutan_bab):
     context['halaman'] = 'koridor'
     pass
+
+
+# Teacher Area
+
+def create(request, slug):
+    if slug != 'new':
+        module = get_object_or_404(Module, slug=slug)
+
+    if request.method == 'POST':
+        form = CreateModule(request.POST, request.FILES, request=request) if slug == 'new' else CreateModule(request.POST, request.FILES,request=request, instance=module)
+        if form.is_valid():
+            module = form.save()
+            if module:
+                messages.success(request, "Berhasil menambahkan Module Kelas")
+            else:
+                messages.error(request, "Gagal menambahkan module Kelas")
+            return redirect('modul:index')
+    else:
+        form = CreateModule() if slug == 'new' else CreateModule(instance=module)
+    return render(request, 'modul/create.html', {'form':form})
+
+def hapus(request):
+    if request.method == "POST":
+        slug = request.POST['slug']
+        modul = Module.objects.get(slug=slug)
+        messages.success(request, f'Kelas {modul.nama} berhasil dihapus')
+        modul.delete()
+        return redirect('modul:index')
+    return redirect('modul:index')
+
+# def edit(request, slug):
+#     module = get_object_or_404(Module, slug=slug)
+
+#     if request.method == 'POST':
+#         form = CreateModule(request.POST, request.FILES, instance=module)
+#         if form.is_valid():
+#             user = request.user if request.user.is_authenticated else None
+#             module = form.save(user=user)
+#             if module:
+#                 messages.success(request, "Berhasil Mengedit Module Kelas")
+#             else:
+#                 messages.error(request, "Gagal Mengedit module Kelas")
+#             return redirect('modul:index')
+#     else:
+#         form = CreateModule(instance=module)
+#     return render(request, 'modul/create.html', {'form':form})

@@ -17,15 +17,11 @@ class Module(models.Model):
     level       = models.ForeignKey(Level,blank=True, null=True,on_delete=models.CASCADE, related_name="level_module")
     keterangan  = models.CharField(blank=True,max_length=224)
     rangkuman   = RichTextField(blank=True, null=True)
-    defaultget  = models.BooleanField(default=False)
-    biaya       = models.IntegerField(default=0)
-    discount    = models.IntegerField(default=0)
     premium     = models.BooleanField(default=False)
-    mahkota     = models.IntegerField(default=0)
-    dilihat     = models.IntegerField(default=0)
     certificate = models.BooleanField(default=False)
     rilis       = models.BooleanField(default=False)
     urutan      = models.IntegerField(blank=True, null=True)
+    created_by  = models.ForeignKey(user_root,blank=True, null=True,on_delete=models.CASCADE, related_name="created_by")
 
     enroll      = Enroll.objects.all()
     def __str__(self):

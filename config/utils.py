@@ -26,7 +26,6 @@ def config(request):
     context['config']   = Setting.objects.get()
     context['me']       = Users.objects.get(user=request.user) if request.user.is_authenticated else ''
     context['premium']  = is_date_in_range(request) if request.user.is_authenticated else False
-    context['mentorlist']   = Users.objects.filter(teacher=True)
     context['url'] = url.url_name if len(url.app_names) == 0 else url.app_names[0]
     context['langganan'] = Langganan.objects.all()
     return context

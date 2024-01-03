@@ -14,4 +14,5 @@ urlpatterns = [
     path('kelas/', include(('kelas.urls', 'kelas'), namespace='kelas')),
     path('modul/', include(('modul.urls', 'modul'), namespace='modul')),
     path('pesan/', include(('pesan.urls', 'pesan'), namespace='pesan')),
+    path('akun/', include(('akun.urls', 'akun'), namespace='akun')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -47,22 +47,22 @@ class QnA(models.Model):
     answer      = models.CharField(max_length=224)
     klik        = models.IntegerField(default=0)
     def __str__(self):
-        return "{} by {}".format(self.quest, self.klik)
+        return "{} | {}".format(self.quest, self.klik)
     
 class Level(models.Model):
     name        = models.CharField(max_length=224,  unique=True)
     keterangan  = models.CharField(max_length=224)
     def __str__(self):
-        return "{} by {}".format(self.name, self.keterangan)
+        return "{} | {}".format(self.name, self.keterangan)
 
 class Master(models.Model):
     name        = models.CharField(max_length=224,  unique=True)
     keterangan  = models.CharField(max_length=224)
     def __str__(self):
-        return "{} by {}".format(self.name, self.keterangan)
+        return "{} | {}".format(self.name, self.keterangan)
 
 class Kategori(models.Model):
     name        = models.CharField(max_length=224,  unique=True)
     keterangan  = models.CharField(max_length=224)
     def __str__(self):
-        return "{} by {}".format(self.name, self.keterangan,  unique=True)
+        return "{} | {}".format(self.name, self.keterangan,  unique=True)

@@ -3,49 +3,52 @@
 {% block head %}
 {% endblock head %}
 {% block title %}Pelajaran{% endblock %}
-{% block css %}
-<style>
-.images{
-    position: relative;
-}
-.images > img {
-    width: 80%;
-}
-.bottom-left {
-  position: absolute;
-  bottom: 10%;
-  left:15%;
-}
-.text {
-  white-space: nowrap; 
-  width: 100%; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.img-mobile {
-    height: 250px;
-    object-fit: cover;
-}
-@media (max-width: 576px) {
-    .img-mobile {
-        height: 120px;
-    }
-}
-</style>
-{% endblock css %}
+
+{% block modal %}
+<div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalHapusLabel">Hapus Module</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+            <img src="/media/char/delete.jpg" alt="" style="width: 70%;">
+            <h5>Yakin ingin menghapus kelas ini ?</h5>
+        </div>
+        <form action="{% url 'modul:hapus' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="slug" id="slugKelas">
+            <div class="modal-footer d-flex gap-3">
+                <button type="button" class="btn btn-outline-primary col" data-bs-dismiss="modal">Keluar</button>
+                <button type="submit" class="btn btn-danger col">Hapus</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+{% endblock %}
 {% block content %}
 <div class="content">
-    <p class="display-5 my-4">Proses Belajar</p>
+    <p class="display-6 my-4">Proses Belajar</p>
+    {% if me.teacher %}
+    <a href="{% url 'modul:create' slug='new' %}" class="btn btn-primary mb-3"><i class="fas fa-plus me-3"></i>Buat Kelas</a>
+    {% endif %}
     <div class="ms-1 row text-center">
+        {% if me.teacher %}
+        <a id="btnkelas" class="col-3 btn text-decoration-none fw-bold btn-primary rounded-0 py-2">Kelas saya</a>
+        <a id="btnlangganan" class="col-3 btn text-decoration-none fw-bold btn-outline-primary  rounded-0 py-2 ">Semua Kelas</a>
+        {% else %}
         <a id="btnkelas" class="col-3 btn text-decoration-none fw-bold btn-primary rounded-0 py-2">Kelas</a>
         <a id="btnlangganan" class="col-3 btn text-decoration-none fw-bold btn-outline-primary  rounded-0 py-2 ">Kelas Tambahan</a>
+        {% endif %}
     </div>
     <div class="mt-4" id="kls">
         <div class="row rounded-3">
         {% for k in kelas %}
-        <div class="col-lg-4 col-6">
+        <div class="col-lg-3 col-md-4 col-6">
             <div class="card w-100">
-                <img src="/media/{{k.photo}}" class="card-img-top w-100 img-mobile" alt="...">
+                <img src="/media/{{k.photo}}" style="width: 100%; height: 200px; object-fit: cover;" alt="...">
                 <div class="card-body d-flex flex-column  fw-semibold">
                     <h5 class="card-title">{{k.nama}} <span class="h6"><i class="far fa-star ms-3 me-1"></i>{% if k.ratting == None %}0.0{%else%}{{ k.ratting}}{% endif %}</span></h5>
                     {% if k.premium %}<div class="text-primary">Permium</div>{% else %} <div class="text-muted">Gratis</div> {% endif %}
@@ -55,36 +58,30 @@
                         <i class="fas fa-check ms-2 me-1"></i>{{k.finish}}
                     </div>
                 </div>
+                {% if me.teacher %}
+                {% if k.created_by == request.user %}
+                <div class="btn-group" role="group" aria-label="Basic example" >
+                    <a href="{% url 'modul:create' slug=k.slug %}" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-pencil me-2"></i>Edit</a>
+                    <a href="{% url 'modul:koridor' slug=k.slug %}" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-eye me-2"></i>Lihat</a>
+                    <button type="button" class="btn rounded-0 btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapus" style="font-size: small;"onclick="slugKelas.value = '{{k.slug}}'"><i class="fas fa-trash me-2"></i>Hapus</button>
+                </div>
+                {% else %}
+                <div class="btn-group" role="group" aria-label="Basic example" >
+                    <button type="button" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-pencil me-2"></i>Saran Edit</button>
+                    <a href="{% url 'modul:koridor' slug=k.slug %}" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-eye me-2"></i>Lihat</a>
+                </div>
+                {% endif %}
+                {% else %}
                 <a href="{% url 'modul:koridor' slug=k.slug %}" class="card-footer btn btn-primary bg-primary text-white fw-bold">
                     EXPLORE
                 </a>
+                {% endif %}
               </div>
         </div>
         {% endfor %}
         </div>
     </div>
     <div class="mt-4 d-none" id="langganan">
-        <div class="bg-white shadow px-3 py-4 rounded-3">
-        {% for k in langganan %}
-            <div class="kelas d-flex justify-content-between p-2 bg-light">
-                <div class="d-flex align-self-center fw-bold h4" style="min-width: 150px;">
-                    <span class="col-1 text-secondary mx-4 align-self-center"><i class="fa-regular fa-circle"></i></span>
-                    <div class="align-self-center mt-2">
-                        <a href="{% url 'modul:koridor' slug=k.slug %}" class="d-md-none d-block  text-decoration-none text-muted">{{k.kelas}}{% if k.premium %} <span class="h6 text-primary pb-3"><i class="fa-solid fa-crown mx-3"></i></span> {% endif %}</a>
-                        <span class="d-none d-md-block">{{k.kelas}} {% if k.premium %} <span class="h6 text-primary pb-3"><i class="fa-solid fa-crown mx-3"></i></span> {% endif %}</span>
-                        <p class="h6 text-muted">
-                            <i class="fas fa-star text-warning me-1"></i>{% if k.ratting == None %}0.0{%else%}{{ k.ratting}}{% endif %}
-                            <i class="fas fa-book me-1 ms-2 text-primary"></i>{{k.pelajaran}}
-                            <i class="fas fa-check ms-2 me-1"></i>{{k.finish}}
-                        </p>
-                    </div>
-                </div>
-                <div class=" align-self-center me-3 link d-none">
-                    <a href="{% url 'modul:koridor' slug=k.slug %}" class="fw-bold btn btn-dark rounded-0">PELAJARI</a>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
     </div>
 {% endblock content %}
 {% block script %}

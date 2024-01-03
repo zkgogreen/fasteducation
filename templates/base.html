@@ -26,15 +26,46 @@
           font-weight: 900;
           color: lightblue;
         }
+        h2.fc-toolbar-title {
+          font-size: 16px !important;
+        }
       </style>
+      <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     {% block css %}{% endblock %}
 </head>
 <body>
+  {% block modal %}{% endblock %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="modal fade show" id="modalmessage" tabindex="-1" aria-labelledby="modalmessageLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" {% if message.tags == 'success' %} style="border: solid rgb(66, 255, 66, 0.5) 2px;" {% else %} style="border: solid rgba(255, 41, 41, 0.5) 2px;"{% endif %}>
+              <div class="modal-body p-3">
+                  <div class="d-flex justify-content-end">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="d-flex gap-2">
+                      <img src="/media/char/{{message.tags}}.jpg" alt="{{message.tag}}" style="mix-blend-mode: multiply; height: 150px;" class="p-1">
+                      <span class="align-self-center col">{{ message|safe }}</span>
+                  </div>
+                  <div class="d-flex gap-2">
+                      <button type="button" class="btn btn-primary col" data-bs-dismiss="modal">Tutup</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+  {% endif %}
   {% include 'snippets/langganan.html' %}
   {% block navigation %} {% endblock %}
   {% block content %} {% endblock %}
-
   
+  <script>
+    $(window).on('load', function() {
+        $('#modalmessage').modal('show');
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
  </html>

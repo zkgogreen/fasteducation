@@ -3,8 +3,6 @@
 {% block head %}
 {% endblock head %}
 {% block title %}Koridor{% endblock %}
-{% block css %}
-{% endblock css %}
 {% block content %}
 <div class="content">
     <div class="mt-2 mb-5">
@@ -35,7 +33,7 @@
             </div>
         </div>
         <div class="bg-white shadow-sm p-3 my-4 rounded-2 card">
-            <div class=" h3 fw-bold">{{enroll.dipelajari}} ({{enroll.percent}}%) sudah dipelajari</div>
+            <div class=" h3 fw-bold">{{enroll.dipelajari}} {% if enroll.dipelajari != 0 %}({{enroll.percent}}%){% endif %} sudah dipelajari</div>
             <div class="row">
                 <div class="fw-semibold text-muted h5 align-self-center col-12 col-md">{{module.bab}} topik, {{module.pelajaran}} pelajaran</div>
                 <div class="align-self-center text-muted col-md-3 col-12">

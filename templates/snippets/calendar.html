@@ -1,0 +1,29 @@
+<div class="bg-white shadow-sm rounded-2 p-2">
+    <div id="calendar"></div>
+</div>
+
+<script>
+    let events = new Array()
+
+    '{% for event in events %}'
+    events.push({title:'{{event.room.mentor}}', start:'{{event.schadule.tanggal|date:"Y-m-d"}}T{{event.schadule.get_time_display}}'})
+    '{% endfor %}'
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'listWeek',
+        locale: 'id',
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          },
+        events: events
+      });
+
+      calendar.render();
+    });
+    console.log(events)
+</script>

@@ -1,4 +1,4 @@
-from kelas.models import Kelas, Schadule, UserMeeting
+from kelas.models import Kelas, Schadule, UserMeeting, UserSchadule
 from transaksi.models import TransaksiGuru, Transaksi
 from config.models import Setting
 from akun.models import Teacher, Premium
@@ -43,6 +43,13 @@ def buatKelas(user, program, jam, jadwal, mulai):
     for day in fetchday(kelas.mulai, kelas.jadwal):
                 Schadule.objects.create(room=kelas, mentor=user, tanggal=day, program=kelas.program)
     return kelas
+
+def joinKelas(request, kelas):
+    usermeeting = UserMeeting.objects.filter(user=request.user, mentor__isnull=True)
+    for i in Schadule.objects.filter(room=kelas):
+        UserSchadule.objects.create(room=kelas, schadule=i, user=request.user, meeting=usermeeting.first(), tanggal=i.tanggal)
+    usermeeting.update(kelas=kelas, mentor=kelas.mentor)
+    return usermeeting
 
 def upgradeKelas(request, id):
     program = Program.objects.get(id=id)

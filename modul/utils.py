@@ -70,16 +70,21 @@ def bab_navigate(request, slug, urutan_bab=None, urutan_pelajaran=None):
     return context
 
 def enroll(request, slug):
-    module = Module.objects.get(slug=slug)
-    pelajaran = Pelajaran.objects.filter(module=module).order_by("urutan")
-    bab = Bab.objects.filter(module=module).order_by("urutan")
+    try:
+        module = Module.objects.get(slug=slug)
+        pelajaran = Pelajaran.objects.filter(module=module).order_by("urutan")
+        bab = Bab.objects.filter(module=module).order_by("urutan")
 
-    enroll = Enroll.objects.filter(user=request.user, module=module)
+        enroll = Enroll.objects.filter(user=request.user, module=module)
 
-    enroll.update(enroll=True, user=request.user, module=module, bab_module=bab.first(), pelajaran=pelajaran.filter(bab_module=bab.first()).first())
-    for i in pelajaran:
-        UserPelajaran.objects.create(enroll=enroll.first(), user=request.user, module=module, pelajaran=i, bab_module=i.bab_module)
-    for i in bab:
-        UserBab.objects.create(enroll=enroll.first(), user=request.user, module=module, bab_module=i)
+        enroll.update(enroll=True, user=request.user, module=module, bab_module=bab.first(), pelajaran=pelajaran.filter(bab_module=bab.first()).first())
+        for i in pelajaran:
+            UserPelajaran.objects.create(enroll=enroll.first(), user=request.user, module=module, pelajaran=i, bab_module=i.bab_module)
+        for i in bab:
+            UserBab.objects.create(enroll=enroll.first(), user=request.user, module=module, bab_module=i)
+        
+        return module
     
-    return module
+    except Exception as e:
+        print(e)
+        return e
