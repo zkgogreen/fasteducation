@@ -7,11 +7,11 @@
 {% block content %}
 <div class="content">
     <div class="my-4 container">
-        <div class="display-4 fw-semibold text-center my-2 pb-3">Belajar dengan tutor</div>
+        <div class="display-6 text-center my-2 pb-3">Belajar dengan tutor</div>
         <div class="row ">
             {% for p in paket %}
             <div class="col-12 col-md-3">
-                <div class="shadow bg-white m-2">
+                <div class="shadow bg-white m-1">
                     <img src="/media/{{p.foto}}" alt="" class="w-100" style="height: 200px; object-fit: cover;">
                     <div class="p-2">
                         <h5 class="text-uppercase fw-bold">{{p.nama}}</h5>
