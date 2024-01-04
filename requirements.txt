@@ -4,3 +4,4 @@ midtransclient==1.4.2
 Requests==2.31.0
 django-allauth==0.59.0
 django-ckeditor==6.7.0
+django-bootstrap-v5

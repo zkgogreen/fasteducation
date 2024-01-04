@@ -23,12 +23,16 @@
         <div class="d-flex justify-content-between">
             <div class="h2 fw-bold">Belajar {{module.nama}}</div>
             <div class="d-flex gap-2">
-                {% if enroll.finish and not enroll.like %} <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn align-self-center btn-dark rounded-0 fw-semibold">Berikan Nilai</button>{% endif %}
-                {% if enroll.enroll and enroll.finish %} <a href="#" class="btn align-self-center btn-dark rounded-0 fw-semibold {% if not enroll.like and not enroll.feed %}disabled{% endif %}">Cetak Sertifikat</a> {% endif %}
-                {% if enroll.enroll %}
-                <a href="{% url 'modul:modul' slug=slug urutan_bab=enroll.bab_module.urutan urutan_pelajaran=enroll.pelajaran.urutan  %}" class="text-uppercase btn align-self-center btn-dark rounded-0 fw-semibold">Lanjutkan</a>
+                {% if me.teacher %}
+                <a href="{% url 'modul:edit' slug=slug %}" class="btn btn-dark rounded-0 align-self-center"><i class="fas fa-pencil me-2"></i>Edit</a>
                 {% else %}
-                <form method="post">{% csrf_token %} <input {% if not user.premium and kelas.premium %}disabled{%endif%} type="submit" value="Daftar" name="daftar" class="btn btn-lg fw-semibold btn-dark rounded-0 shadow"></form>
+                    {% if enroll.finish and not enroll.like %} <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn align-self-center btn-dark rounded-0 fw-semibold">Berikan Nilai</button>{% endif %}
+                    {% if enroll.enroll and enroll.finish %} <a href="#" class="btn align-self-center btn-dark rounded-0 fw-semibold {% if not enroll.like and not enroll.feed %}disabled{% endif %}">Cetak Sertifikat</a> {% endif %}
+                    {% if enroll.enroll %}
+                    <a href="{% url 'modul:modul' slug=slug urutan_bab=enroll.bab_module.urutan urutan_pelajaran=enroll.pelajaran.urutan  %}" class="text-uppercase btn align-self-center btn-dark rounded-0 fw-semibold">Lanjutkan</a>
+                    {% else %}
+                    <form method="post">{% csrf_token %} <input {% if not user.premium and kelas.premium %}disabled{%endif%} type="submit" value="Daftar" name="daftar" class="btn btn-lg fw-semibold btn-dark rounded-0 shadow"></form>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

@@ -4,6 +4,7 @@ from . import views_belajar
 urlpatterns = [
     path('', views_belajar.index, name="index"),
     path('create/<str:slug>', views_belajar.create, name="create"),
+    path('edit/<str:slug>', views_belajar.edit, name="edit"),
     path('hapus', views_belajar.hapus, name="hapus"),
 
     path('<str:slug>', views_belajar.koridor, name="koridor"),

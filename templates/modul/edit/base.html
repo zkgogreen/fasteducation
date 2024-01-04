@@ -1,0 +1,135 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if current_bab %}{{current_bab.bab}}{% else %}{{modul.nama}}{% endif %}</title>
+    <link rel="shortcut icon" href="/media/{{config.icon}}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pelajaran.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <div class="topbar shadow bg-white">
+        <div class="d-flex justify-content-between container-fluid">
+            <div class="d-flex ">
+                <a href="{% url 'modul:koridor' slug=slug %}" class="btn mt-2 align-self-center"><h4><i class="fas fa-arrow-left me-3"></i></h4></a>
+                <div id="title" class="align-self-center h4 fw-light">{{current_bab.bab}}</div>
+            </div>
+            <div class="d-flex me-3">
+                <div class="btn align-self-center d-none d-md-block">
+                    <div class="input-group ">
+                        <input type="text" class="form-control" placeholder="cari" >
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+                <h3 id="closeSearch" class="align-self-center me-3 d-none"><i class="fas fa-times"></i></h3>
+                <div id="comment" class="btn align-self-center" data-bs-toggle="modal" data-bs-target="#modalcomment"><i class="fa-regular fa-comment"></i></div>
+                <div id="search" class="btn align-self-center  d-block d-md-none"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div id="menu" class="btn align-self-center"><i class="fa-solid fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+    <div id="pelajaran">
+        {% block content %}{% endblock content %}
+        {% include 'modul/edit/sidebar.html' %}    
+    </div>
+    {% include 'modul/edit/footer.html' %}
+
+    <!-- modal -->
+<!-- modal message  -->
+
+{% if messages %}
+{% for message in messages %}
+<div class="modal fade show" id="modalmessage" tabindex="-1" aria-labelledby="modalmessageLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" {% if message.tags == 'success' %} style="border: solid rgb(66, 255, 66, 0.5) 2px;" {% else %} style="border: solid rgba(255, 41, 41, 0.5) 2px;"{% endif %}>
+            <div class="modal-body p-3">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="d-flex gap-2">
+                    <img src="/media/char/{{message.tags}}.jpg" alt="{{message.tag}}" style="mix-blend-mode: multiply; height: 150px;" class="p-1">
+                    <span class="align-self-center col">{{ message }}</span>
+                </div>
+                <div class="d-flex gap-2">
+                    {% if message.tags == 'error' %}
+                        {% if premium %}
+                        <a href="{% url 'kelas:upgrade' %}" class="btn btn-outline-primary col">Tanya Mentor</a>
+                        {% else %}
+                        <a href="{% url 'kelas:upgrade' %}" class="btn btn-outline-primary col">Upgrade</a>
+                        {% endif %}
+                    {% endif %}
+                    <button type="button" class="btn btn-primary col" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script>
+    const menu = document.getElementById("menu");
+    const pelajaran = document.getElementById("pelajaran");
+    const search = document.getElementById("search");
+    const closeSearch = document.getElementById("closeSearch");
+    const comment = document.getElementById("comment");
+    const title = document.getElementById("title");
+    const table = document.getElementsByTagName("table")
+    const btnTry = document.getElementById("btn-try")
+    const btnNext = document.getElementById("btn-next")
+    const countdownElement = document.getElementById("countdownElement")
+    menu.addEventListener('click', function(){
+        pelajaran.classList.toggle("active");
+    })
+    search.addEventListener('click', function(){
+        this.parentElement.children[0].classList.toggle("d-none");
+        this.classList.toggle("d-none");
+        this.parentElement.children[0].children[0].children[0].focus();
+        title.classList.toggle("d-none");
+        comment.classList.toggle("d-none");
+        closeSearch.classList.toggle("d-none");
+    })
+    closeSearch.addEventListener('click', function(){
+        search.parentElement.children[0].classList.toggle("d-none");
+        search.classList.toggle("d-none");
+        title.classList.toggle("d-none");
+        comment.classList.toggle("d-none");
+        this.classList.toggle("d-none");
+    })
+
+    for(var i=0; i<table.length; i++){
+        table[i].classList.add("table");
+        table[i].classList.add("table-sm");
+        table[i].classList.add("table-bordered");
+        table[i].classList.add("table-hover");
+    }
+
+    function updateCountdown(seconds) {
+    countdownElement.innerHTML = `Countdown: ${seconds} seconds`;
+    
+        if (seconds === 0) {
+            btnTry.classList.add("d-none");
+            btnNext.classList.remove("d-none");
+            countdownElement.innerHTML = ""; // Remove countdown text when it reaches 0
+        } else {
+            setTimeout(() => {
+            updateCountdown(seconds - 1);
+            }, 1000); // Update the countdown every 1 second (1000 milliseconds)
+        }
+    }
+
+    // Start the countdown when the page loads (you can trigger it in response to an event as well)
+    updateCountdown(10);
+</script>
+<script>
+$(window).on('load', function() {
+    $('#modalmessage').modal('show');
+});
+</script>
+</body>
+</html>

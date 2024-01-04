@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'bootstrap5',
     'ckeditor',
     'allauth',
     'allauth.account',
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     'transaksi',
     'kelas',
     'modul',
-    'website'
+    'website',
 ]
 
 MIDDLEWARE = [

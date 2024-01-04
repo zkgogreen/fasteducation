@@ -4,7 +4,7 @@ from akun.models import Users
 from modul.models.modul import Module, Pelajaran, Bab, Soal
 from modul.models.user import Enroll, UserLatihan, UserPelajaran, UserBab
 from modul.utils import bab_navigate, enroll as subscribe
-from modul.forms import FormKomentar, CreateModule
+from modul.forms import FormKomentar, CreateModule, CreateBab
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
@@ -59,7 +59,7 @@ def rangkuman(request, slug, urutan_bab):
     context['bab'] = bab
     context['slug'] = slug
     context['urutan_bab'] = urutan_bab
-    context['prev'] = UserPelajaran.objects.get(user=request.user, pelajaran=current_bab.getPelajaran().latest('urutan')) 
+    context['prev'] = UserPelajaran.objects.get(user=request.user, pelajaran=current_bab.getPelajaran().latest('urutan')) if bab.exists() else None
     context['halaman'] = 'rangkuman'
     context['current'] = None
     return render(request, 'modul/belajar/rangkuman.html', context)
@@ -97,19 +97,22 @@ def hapus(request):
         return redirect('modul:index')
     return redirect('modul:index')
 
-# def edit(request, slug):
-#     module = get_object_or_404(Module, slug=slug)
-
-#     if request.method == 'POST':
-#         form = CreateModule(request.POST, request.FILES, instance=module)
-#         if form.is_valid():
-#             user = request.user if request.user.is_authenticated else None
-#             module = form.save(user=user)
-#             if module:
-#                 messages.success(request, "Berhasil Mengedit Module Kelas")
-#             else:
-#                 messages.error(request, "Gagal Mengedit module Kelas")
-#             return redirect('modul:index')
-#     else:
-#         form = CreateModule(instance=module)
-#     return render(request, 'modul/create.html', {'form':form})
+def edit(request, slug):
+    module = Module.objects.get(slug=slug)
+    if request.method == 'POST':
+        form = CreateBab(request.POST)
+        
+        if form.is_valid():
+            bab_instance = form.save(commit=False)
+            bab_instance.module = module
+            bab_instance.save()
+            
+            # Assuming there's a redirect or some other logic after saving the form
+            return redirect('modul:edit', slug=slug)
+    else:
+        form = CreateBab()
+    context = {}
+    context['bab'] = Bab.objects.filter(module=module).order_by('urutan')
+    context['slug'] = slug
+    context['form'] = form
+    return render(request, 'modul/edit/index.html', context)

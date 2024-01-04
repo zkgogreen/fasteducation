@@ -2,11 +2,11 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from modul.models.user import UserPelajaran
-from modul.models.modul import Module
+from modul.models.modul import Module, Bab
 from django.forms import ModelForm, TextInput, FileInput, Select
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
-
+from ckeditor.fields import RichTextField
 
 # Create your forms here.
 
@@ -58,5 +58,10 @@ class CreateModule(forms.ModelForm):
 
         if commit:
             instance.save()
-
         return instance
+	
+class CreateBab(forms.ModelForm):
+    class Meta:
+        model = Bab
+        fields = '__all__'
+        exclude = ['module', 'rangkuman']
