@@ -4,17 +4,18 @@ from akun.models import Users
 from modul.models.modul import Module, Pelajaran, Bab, Soal
 from modul.models.user import Enroll, UserLatihan, UserPelajaran, UserBab
 from modul.utils import bab_navigate, enroll as subscribe
-from modul.forms import FormKomentar, CreateModule, CreateBab
+from modul.forms import FormKomentar, CreateModule, CreateBab, CreatePelajaran
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
-context = {}
 
 def index(request):
+    context = {}
     context["kelas"] = Module.objects.all()
     return render(request, 'modul/index.html', context)
 
 def koridor(request, slug):
+    context = {}
     module = Module.objects.get(slug=slug)
     enroll = Enroll.objects.filter(user=request.user, module=module)
     context['slug'] = slug
@@ -31,6 +32,7 @@ def koridor(request, slug):
     return render(request, 'modul/koridor.html', context)
 
 def modul(request, slug, urutan_bab, urutan_pelajaran):
+    context = {}
     context.update(bab_navigate(request, slug, urutan_bab, urutan_pelajaran))
     pelajaran = UserPelajaran.objects.get(user=request.user, module=context['modul'], bab_module=context['current_bab'], pelajaran=context['current_pelajaran'])
     if not pelajaran.allow_next():
@@ -51,6 +53,7 @@ def modul(request, slug, urutan_bab, urutan_pelajaran):
     return render(request, 'modul/belajar/index.html', context)
 
 def rangkuman(request, slug, urutan_bab):
+    context = {}
     module = Module.objects.get(slug=slug)
     bab = UserBab.objects.filter(module=module)
     current_bab = Bab.objects.get(module=module, urutan=urutan_bab)
@@ -65,54 +68,6 @@ def rangkuman(request, slug, urutan_bab):
     return render(request, 'modul/belajar/rangkuman.html', context)
 
 def koridor_soal(request, slug, urutan_bab):
+    context = {}
     context['halaman'] = 'koridor'
     pass
-
-
-# Teacher Area
-
-def create(request, slug):
-    if slug != 'new':
-        module = get_object_or_404(Module, slug=slug)
-
-    if request.method == 'POST':
-        form = CreateModule(request.POST, request.FILES, request=request) if slug == 'new' else CreateModule(request.POST, request.FILES,request=request, instance=module)
-        if form.is_valid():
-            module = form.save()
-            if module:
-                messages.success(request, "Berhasil menambahkan Module Kelas")
-            else:
-                messages.error(request, "Gagal menambahkan module Kelas")
-            return redirect('modul:index')
-    else:
-        form = CreateModule() if slug == 'new' else CreateModule(instance=module)
-    return render(request, 'modul/create.html', {'form':form})
-
-def hapus(request):
-    if request.method == "POST":
-        slug = request.POST['slug']
-        modul = Module.objects.get(slug=slug)
-        messages.success(request, f'Kelas {modul.nama} berhasil dihapus')
-        modul.delete()
-        return redirect('modul:index')
-    return redirect('modul:index')
-
-def edit(request, slug):
-    module = Module.objects.get(slug=slug)
-    if request.method == 'POST':
-        form = CreateBab(request.POST)
-        
-        if form.is_valid():
-            bab_instance = form.save(commit=False)
-            bab_instance.module = module
-            bab_instance.save()
-            
-            # Assuming there's a redirect or some other logic after saving the form
-            return redirect('modul:edit', slug=slug)
-    else:
-        form = CreateBab()
-    context = {}
-    context['bab'] = Bab.objects.filter(module=module).order_by('urutan')
-    context['slug'] = slug
-    context['form'] = form
-    return render(request, 'modul/edit/index.html', context)

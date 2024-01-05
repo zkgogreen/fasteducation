@@ -1,4 +1,5 @@
 {% extends 'dashboard.html' %}
+{% load bootstrap5 %}
 
 {% block title %}Buat Kelas{% endblock %}
 {% block content %}
@@ -6,7 +7,7 @@
     <p class="display-6 my-4">Buat Kelas</p>
     <form action="" method="post" enctype="multipart/form-data" class="rounded-3 bg-white p-3 mb-3">
         {% csrf_token %}
-        {{form.as_p}}
+        {% bootstrap_form form %}
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary col-3">Simpan</button>
         </div>

@@ -1,0 +1,22 @@
+{% extends 'modul/edit/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="isi bg-white">
+    <div class="container my-4">
+        <style>
+            .django-ckeditor-widget {
+                width: 100%;
+            }
+        </style>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {% bootstrap_form form %}
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary col-3" type="submit">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

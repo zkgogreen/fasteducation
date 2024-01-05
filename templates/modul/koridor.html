@@ -24,7 +24,7 @@
             <div class="h2 fw-bold">Belajar {{module.nama}}</div>
             <div class="d-flex gap-2">
                 {% if me.teacher %}
-                <a href="{% url 'modul:edit' slug=slug %}" class="btn btn-dark rounded-0 align-self-center"><i class="fas fa-pencil me-2"></i>Edit</a>
+                <a href="{% url 'modul:pelajaran' slug=slug %}" class="btn btn-dark rounded-0 align-self-center"><i class="fas fa-pencil me-2"></i>Edit</a>
                 {% else %}
                     {% if enroll.finish and not enroll.like %} <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn align-self-center btn-dark rounded-0 fw-semibold">Berikan Nilai</button>{% endif %}
                     {% if enroll.enroll and enroll.finish %} <a href="#" class="btn align-self-center btn-dark rounded-0 fw-semibold {% if not enroll.like and not enroll.feed %}disabled{% endif %}">Cetak Sertifikat</a> {% endif %}

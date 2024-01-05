@@ -66,7 +66,7 @@ class Bab(models.Model):
     premium     = models.BooleanField(default=False)
     def __str__(self):
         return "{}-{}".format(self.module, self.bab)
-    def getPelajaran(self):
+    def pelajaran(self):
         return Pelajaran.objects.filter(bab_module=self).order_by("urutan")
     
 

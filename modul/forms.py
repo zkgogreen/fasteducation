@@ -2,11 +2,12 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from modul.models.user import UserPelajaran
-from modul.models.modul import Module, Bab
+from modul.models.modul import Module, Bab, Pelajaran
 from django.forms import ModelForm, TextInput, FileInput, Select
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
+from ckeditor.widgets import CKEditorWidget
 
 # Create your forms here.
 
@@ -61,7 +62,15 @@ class CreateModule(forms.ModelForm):
         return instance
 	
 class CreateBab(forms.ModelForm):
+    rangkuman = forms.CharField(widget=CKEditorWidget())
     class Meta:
         model = Bab
         fields = '__all__'
-        exclude = ['module', 'rangkuman']
+        exclude = ['module']
+
+class CreatePelajaran(forms.ModelForm):
+    text = forms.CharField(widget=CKEditorWidget())
+    class Meta:
+        model = Pelajaran
+        fields = '__all__'
+        exclude = ['module', 'urutan','bab_module','approve']

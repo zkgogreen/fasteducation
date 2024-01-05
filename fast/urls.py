@@ -15,4 +15,5 @@ urlpatterns = [
     path('modul/', include(('modul.urls', 'modul'), namespace='modul')),
     path('pesan/', include(('pesan.urls', 'pesan'), namespace='pesan')),
     path('akun/', include(('akun.urls', 'akun'), namespace='akun')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
