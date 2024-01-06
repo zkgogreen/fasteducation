@@ -3,7 +3,34 @@
 {% block head %}
 {% endblock head %}
 {% block title %}Koridor{% endblock %}
+
+
 {% block content %}
+<div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalHapusLabel">Hapus Module</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+            <img src="/media/char/delete.jpg" alt="" style="width: 70%;">
+            <h5>Yakin ingin menghapus kelas ini ?</h5>
+            <div class="my-3">
+                <label for="validation" class="form-label">Validasi Hapus</label>
+                <input type="text" class="form-control is-invalid" id="validation" onkeyup="if(this.value == '{{module.nama}}'){document.getElementById('hapuskelas').classList.remove('disabled')}" aria-describedby="validationFeedback" required>
+                <div id="validationFeedback" class="invalid-feedback">
+                  Ketik "{{module.nama}}"
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-3 p-3">
+            <button type="button" class="btn btn-outline-primary col" data-bs-dismiss="modal">Keluar</button>
+            <a href="{% url 'modul:module' slug=slug action='delete' %}" id="hapuskelas" class="btn btn-danger col disabled">Hapus</a>
+        </div>
+    </div>
+    </div>
+</div>
 <div class="content">
     <div class="mt-2 mb-5">
         {% if not user.premium and kelas.premium %}
@@ -24,7 +51,8 @@
             <div class="h2 fw-bold">Belajar {{module.nama}}</div>
             <div class="d-flex gap-2">
                 {% if me.teacher %}
-                <a href="{% url 'modul:pelajaran' slug=slug %}" class="btn btn-dark rounded-0 align-self-center"><i class="fas fa-pencil me-2"></i>Edit</a>
+                <button type="button" class="btn rounded-0 btn-danger align-self-center" data-bs-toggle="modal" data-bs-target="#modalHapus" onclick="slugKelas.value = '{{k.slug}}'"><i class="fas fa-trash me-2"></i>Hapus</button>
+                <a href="{% url 'modul:module' slug=slug action='read' %}" class="btn btn-dark rounded-0 align-self-center"><i class="fas fa-pencil me-2"></i>Edit</a>
                 {% else %}
                     {% if enroll.finish and not enroll.like %} <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn align-self-center btn-dark rounded-0 fw-semibold">Berikan Nilai</button>{% endif %}
                     {% if enroll.enroll and enroll.finish %} <a href="#" class="btn align-self-center btn-dark rounded-0 fw-semibold {% if not enroll.like and not enroll.feed %}disabled{% endif %}">Cetak Sertifikat</a> {% endif %}

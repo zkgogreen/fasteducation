@@ -4,7 +4,7 @@
 <div class="isi bg-white">
     <div class="container my-4">
         <div class="d-flex justify-content-end gap-3">
-            <a href="{% url 'modul:bab_form' slug=slug action=bab.id %}" class="btn btn-dark rounded-0"><i class="fas fa-pencil me-2"></i> Edit</a>
+            <a href="{% url 'modul:bab' slug=slug pk=bab.id action='edit' %}" class="btn btn-dark rounded-0"><i class="fas fa-pencil me-2"></i> Edit</a>
             <a href="#" class="btn btn-danger rounded-0"><i class="fas fa-trash me-2"></i>Hapus</a>
         </div>
         {{bab.rangkuman|safe}}

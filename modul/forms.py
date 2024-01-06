@@ -51,16 +51,20 @@ class CreateModule(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super(CreateModule, self).save(commit=False)
-        instance.rilis = False  # Default value for rilis
         instance.created_by = self.request.user if self.request else None
-
-        # Generate slug based on nama
         instance.slug = slugify(instance.nama)
 
         if commit:
             instance.save()
         return instance
-	
+    
+class EditModule(forms.ModelForm):
+    rangkuman = forms.CharField(widget=CKEditorWidget())
+    class Meta:
+        model = Module
+        fields = ("nama", "keterangan","rangkuman",  "premium", "certificate", "rilis")
+      
+      
 class CreateBab(forms.ModelForm):
     rangkuman = forms.CharField(widget=CKEditorWidget())
     class Meta:

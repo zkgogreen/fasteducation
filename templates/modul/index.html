@@ -4,35 +4,11 @@
 {% endblock head %}
 {% block title %}Pelajaran{% endblock %}
 
-{% block modal %}
-<div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h1 class="modal-title fs-5" id="modalHapusLabel">Hapus Module</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center">
-            <img src="/media/char/delete.jpg" alt="" style="width: 70%;">
-            <h5>Yakin ingin menghapus kelas ini ?</h5>
-        </div>
-        <form action="{% url 'modul:hapus' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="slug" id="slugKelas">
-            <div class="modal-footer d-flex gap-3">
-                <button type="button" class="btn btn-outline-primary col" data-bs-dismiss="modal">Keluar</button>
-                <button type="submit" class="btn btn-danger col">Hapus</button>
-            </div>
-        </form>
-    </div>
-    </div>
-</div>
-{% endblock %}
 {% block content %}
 <div class="content">
     <p class="display-6 my-4">Proses Belajar</p>
     {% if me.teacher %}
-    <a href="{% url 'modul:create' slug='new' %}" class="btn btn-primary mb-3"><i class="fas fa-plus me-3"></i>Buat Kelas</a>
+    <a href="{% url 'modul:module' slug='new' action='create' %}" class="btn btn-primary mb-3"><i class="fas fa-plus me-3"></i>Buat Kelas</a>
     {% endif %}
     <div class="ms-1 row text-center">
         {% if me.teacher %}
@@ -61,9 +37,8 @@
                 {% if me.teacher %}
                 {% if k.created_by == request.user %}
                 <div class="btn-group" role="group" aria-label="Basic example" >
-                    <a href="{% url 'modul:create' slug=k.slug %}" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-pencil me-2"></i>Edit</a>
-                    <a href="{% url 'modul:koridor' slug=k.slug %}" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-eye me-2"></i>Lihat</a>
-                    <button type="button" class="btn rounded-0 btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapus" style="font-size: small;"onclick="slugKelas.value = '{{k.slug}}'"><i class="fas fa-trash me-2"></i>Hapus</button>
+                    <a href="{% url 'modul:module' slug=k.slug action='read' %}" class="btn btn-primary rounded-0 "><i class="fas fa-pencil me-2"></i>edit</a>
+                    <a href="{% url 'modul:koridor' slug=k.slug %}" class="btn  rounded-0 btn-primary" style="font-size: small;"><i class="fas fa-eye me-2"></i>Lihat</a>    
                 </div>
                 {% else %}
                 <div class="btn-group" role="group" aria-label="Basic example" >

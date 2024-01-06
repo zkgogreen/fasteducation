@@ -5,12 +5,14 @@ urlpatterns = [
     path('', views_belajar.index, name="index"),
 
     # kelas
-    path('edit/create/<str:slug>', views_edit_belajar.create, name="create"), #create | edit
-    path('edit/delete/hapus', views_edit_belajar.hapus, name="hapus"),
+    # path('<str:slug>/create', views_edit_belajar.create, name="create"), #create | edit
+    # path('edit/delete/hapus', views_edit_belajar.hapus, name="hapus"),
+    path('edit/<str:slug>/<str:action>', views_edit_belajar.ModuleView.as_view(), name="module"),
+    path('edit/<str:slug>/bab/<str:pk>/<str:action>', views_edit_belajar.BabView.as_view(), name="bab"),
 
-    path('edit/bab/<str:pk>', views_edit_belajar.bab, name="bab"),
-    path('edit/bab_form/<str:slug>/<str:action>', views_edit_belajar.BabView.as_view(), name="bab_form"),
-    path('edit/pelajaran/<str:slug>', views_edit_belajar.pelajaran, name="pelajaran"),
+    # path('edit/bab/<str:pk>', views_edit_belajar.bab, name="bab"),
+    # path('edit/<str:slug>/bab_form/<str:action>', views_edit_belajar.BabView.as_view(), name="bab_create"),
+    # path('edit/<str:slug>/bab_form/<str:action>/<str:pk>', views_edit_belajar.BabView.as_view(), name="bab_edit"),
 
     #pelajaran
     path('edit/pelajaran_edit/<int:bab_id>/<str:pelajaran>', views_edit_belajar.pelajaran_edit, name="pelajaran_edit"),
